@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Be Vietnam Pro", "Inter", "Segoe UI", sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #1a3021;
+  }
+
+  p,
+  li,
+  span,
+  label,
+  small {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply rounded-3xl border border-slate-100 bg-white shadow-sm;
+  }
+
+  .text-primary {
+    color: #0f172a;
+  }
+
+  .text-secondary {
+    color: #475569;
+  }
+
+  .text-accent {
+    color: #1a3021;
+  }
+}
