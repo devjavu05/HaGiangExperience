@@ -85,6 +85,14 @@ public class Experience {
     )
     private List<ExperienceItinerary> itineraries = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "experience",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Review> reviews = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
             name = "experience_categories",
@@ -261,5 +269,26 @@ public class Experience {
         if (categories != null) {
             this.categories.addAll(categories);
         }
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews.clear();
+        if (reviews != null) {
+            reviews.forEach(this::addReview);
+        }
+    }
+
+    public void addReview(Review review) {
+        review.setExperience(this);
+        this.reviews.add(review);
+    }
+
+    public void removeReview(Review review) {
+        review.setExperience(null);
+        this.reviews.remove(review);
     }
 }

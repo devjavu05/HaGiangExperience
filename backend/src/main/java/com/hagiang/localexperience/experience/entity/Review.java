@@ -3,6 +3,8 @@ package com.hagiang.localexperience.experience.entity;
 import com.hagiang.localexperience.auth.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "reviews")
@@ -29,6 +31,9 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Review parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> replies = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -86,5 +91,26 @@ public class Review {
 
     public void setParent(Review parent) {
         this.parent = parent;
+    }
+
+    public List<Review> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Review> replies) {
+        this.replies.clear();
+        if (replies != null) {
+            replies.forEach(this::addReply);
+        }
+    }
+
+    public void addReply(Review reply) {
+        reply.setParent(this);
+        this.replies.add(reply);
+    }
+
+    public void removeReply(Review reply) {
+        reply.setParent(null);
+        this.replies.remove(reply);
     }
 }
