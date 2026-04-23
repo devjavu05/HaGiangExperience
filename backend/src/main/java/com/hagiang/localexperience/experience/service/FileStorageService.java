@@ -1,14 +1,12 @@
 package com.hagiang.localexperience.experience.service;
 
-import com.hagiang.localexperience.common.config.UploadProperties;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.hagiang.localexperience.common.config.CloudinaryProperties;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,43 +15,62 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileStorageService {
 
-    private final Path uploadRootPath;
+    private static final String DEFAULT_FOLDER = "ha-giang-local-experience";
 
-    public FileStorageService(UploadProperties uploadProperties) {
-        this.uploadRootPath = Paths.get(uploadProperties.getDir()).toAbsolutePath().normalize();
+    private final CloudinaryProperties cloudinaryProperties;
+    private final Cloudinary cloudinary;
+
+    public FileStorageService(CloudinaryProperties cloudinaryProperties) {
+        this.cloudinaryProperties = cloudinaryProperties;
+        this.cloudinary = cloudinaryProperties.isConfigured()
+                ? new Cloudinary(ObjectUtils.asMap(
+                        "cloud_name", cloudinaryProperties.getCloudName(),
+                        "api_key", cloudinaryProperties.getApiKey(),
+                        "api_secret", cloudinaryProperties.getApiSecret(),
+                        "secure", true
+                ))
+                : null;
     }
 
     public List<String> storeFiles(List<MultipartFile> files) {
-        try {
-            Files.createDirectories(uploadRootPath);
-            List<String> storedUrls = new ArrayList<>();
+        ensureConfigured();
 
+        List<String> storedUrls = new ArrayList<>();
+
+        try {
             for (MultipartFile file : files) {
                 if (file == null || file.isEmpty()) {
                     continue;
                 }
 
-                String storedFileName = generateFileName(file);
-                Path targetPath = uploadRootPath.resolve(storedFileName).normalize();
-
-                if (!targetPath.startsWith(uploadRootPath)) {
-                    throw new IllegalArgumentException("Invalid image file name");
+                if (!isImage(file)) {
+                    throw new IllegalArgumentException("Only image files are supported");
                 }
 
-                try (InputStream inputStream = file.getInputStream()) {
-                    Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
-                }
+                Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                        file.getBytes(),
+                        ObjectUtils.asMap(
+                                "folder", resolveFolder(),
+                                "public_id", generateFileName(file),
+                                "resource_type", "image"
+                        )
+                );
 
-                storedUrls.add("/uploads/" + storedFileName);
+                Object secureUrl = uploadResult.get("secure_url");
+                if (secureUrl instanceof String url && StringUtils.hasText(url)) {
+                    storedUrls.add(url);
+                }
             }
 
             return storedUrls;
         } catch (IOException ex) {
-            throw new IllegalArgumentException("Unable to store image files");
+            throw new IllegalArgumentException("Unable to store image files", ex);
         }
     }
 
     public void deleteFiles(List<String> imageUrls) {
+        ensureConfigured();
+
         if (imageUrls == null || imageUrls.isEmpty()) {
             return;
         }
@@ -63,16 +80,15 @@ public class FileStorageService {
                 continue;
             }
 
-            String fileName = imageUrl.replace("/uploads/", "");
-            Path targetPath = uploadRootPath.resolve(fileName).normalize();
-            if (!targetPath.startsWith(uploadRootPath)) {
+            String publicId = extractPublicId(imageUrl);
+            if (!StringUtils.hasText(publicId)) {
                 continue;
             }
 
             try {
-                Files.deleteIfExists(targetPath);
+                cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", "image"));
             } catch (IOException ex) {
-                throw new IllegalArgumentException("Unable to delete image file: " + imageUrl);
+                throw new IllegalArgumentException("Unable to delete image file: " + imageUrl, ex);
             }
         }
     }
@@ -90,5 +106,37 @@ public class FileStorageService {
                 .replace(" ", "_");
 
         return UUID.randomUUID() + "_" + sanitizedFileName;
+    }
+
+    private void ensureConfigured() {
+        if (!cloudinaryProperties.isConfigured() || cloudinary == null) {
+            throw new IllegalStateException("Cloudinary is not configured");
+        }
+    }
+
+    private boolean isImage(MultipartFile file) {
+        return file.getContentType() != null && file.getContentType().toLowerCase().startsWith("image/");
+    }
+
+    private String resolveFolder() {
+        return StringUtils.hasText(cloudinaryProperties.getFolder())
+                ? cloudinaryProperties.getFolder().trim()
+                : DEFAULT_FOLDER;
+    }
+
+    private String extractPublicId(String imageUrl) {
+        if (!StringUtils.hasText(imageUrl) || !imageUrl.contains("/upload/")) {
+            return null;
+        }
+
+        String afterUpload = imageUrl.substring(imageUrl.indexOf("/upload/") + "/upload/".length());
+        afterUpload = afterUpload.replaceFirst("^v\\d+/", "");
+
+        int extensionIndex = afterUpload.lastIndexOf('.');
+        if (extensionIndex <= 0) {
+            return afterUpload;
+        }
+
+        return afterUpload.substring(0, extensionIndex);
     }
 }

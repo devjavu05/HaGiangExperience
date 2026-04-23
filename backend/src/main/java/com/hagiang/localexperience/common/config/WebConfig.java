@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableConfigurationProperties({UploadProperties.class, CorsProperties.class})
+@EnableConfigurationProperties({UploadProperties.class, CorsProperties.class, CloudinaryProperties.class})
 public class WebConfig implements WebMvcConfigurer {
 
     private final UploadProperties uploadProperties;

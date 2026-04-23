@@ -15,14 +15,17 @@ SPRING_DATASOURCE_URL=jdbc:mysql://<tidb-host>:4000/<database>?useSSL=true&requi
 SPRING_DATASOURCE_USERNAME=<tidb-username>
 SPRING_DATASOURCE_PASSWORD=<tidb-password>
 APP_CORS_ALLOWED_ORIGINS=https://your-frontend-domain.com
-APP_UPLOAD_DIR=/data/uploads
 SERVER_PORT=8080
+CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name>
+CLOUDINARY_API_KEY=<cloudinary-api-key>
+CLOUDINARY_API_SECRET=<cloudinary-api-secret>
+CLOUDINARY_FOLDER=ha-giang-local-experience
 ```
 
 Notes:
 
 - If you have multiple frontend domains, separate them with commas in `APP_CORS_ALLOWED_ORIGINS`.
-- `APP_UPLOAD_DIR` should point to persistent storage on the server, not a temporary directory.
+- Uploaded images are now stored in Cloudinary, so Render no longer needs persistent disk storage for images.
 
 ## 2. Deploy backend on Render
 
@@ -40,17 +43,19 @@ Set these environment variables in Render:
 
 ```env
 SERVER_PORT=8080
-APP_UPLOAD_DIR=/data/uploads
 APP_CORS_ALLOWED_ORIGINS=https://your-netlify-site.netlify.app
 SPRING_DATASOURCE_URL=jdbc:mysql://<tidb-host>:4000/<database>?useSSL=true&requireSSL=true&sslMode=VERIFY_IDENTITY&enabledTLSProtocols=TLSv1.2,TLSv1.3&serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci
 SPRING_DATASOURCE_USERNAME=<tidb-username>
 SPRING_DATASOURCE_PASSWORD=<tidb-password>
+CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name>
+CLOUDINARY_API_KEY=<cloudinary-api-key>
+CLOUDINARY_API_SECRET=<cloudinary-api-secret>
+CLOUDINARY_FOLDER=ha-giang-local-experience
 ```
 
 Important note:
 
-- Render disk is ephemeral on free instances. Uploaded images in `/data/uploads` can be lost after restart/redeploy.
-- If you need images to persist, move uploads to object storage like Cloudinary, S3, or Supabase Storage later.
+- Because image assets are stored in Cloudinary, they remain available after Render restarts or redeploys.
 
 After deploy, Render will give you a backend URL like:
 
