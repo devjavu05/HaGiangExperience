@@ -1,6 +1,16 @@
 ﻿import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock3, MapPinned, Plus, ShieldCheck, Sparkles, Trash2, UserRound, X } from "lucide-react";
+import {
+  Clock3,
+  LoaderCircle,
+  MapPinned,
+  Plus,
+  ShieldCheck,
+  Sparkles,
+  Trash2,
+  UserRound,
+  X
+} from "lucide-react";
 import MultiImageUpload from "../components/experience/MultiImageUpload";
 import { createExperience, updateExperience } from "../services/experienceService";
 
@@ -506,7 +516,41 @@ function CreateExperienceForm({
   const visibleErrors = hasAttemptedSubmit ? errors : {};
 
   return (
-    <div className="mx-auto w-full max-w-[1600px] px-6 pb-12 pt-32 sm:px-8 sm:pb-14 sm:pt-36 lg:px-12 xl:px-14 2xl:px-16">
+    <>
+      <AnimatePresence>
+        {isSubmitting ? (
+          <motion.div
+            key="submit-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed inset-0 z-[120] flex items-center justify-center bg-[#163020]/45 px-6 backdrop-blur-[6px]"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 18, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.24, ease: "easeOut" }}
+              className="w-full max-w-sm rounded-[32px] border border-white/40 bg-white/92 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.22)]"
+            >
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2F5D46,#6E9C83)] text-white shadow-[0_16px_40px_rgba(47,93,70,0.28)]">
+                <LoaderCircle size={28} className="animate-spin" />
+              </div>
+              <p className="mt-5 text-lg font-semibold text-stone-900">
+                {isEditMode ? "Đang cập nhật bài đăng" : "Đang đăng bài trải nghiệm"}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-stone-600">
+                Vui lòng chờ trong giây lát. Nội dung đang được lưu và tạm thời bị khóa chỉnh sửa.
+              </p>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <div className="mx-auto w-full max-w-[1600px] px-6 pb-12 pt-32 sm:px-8 sm:pb-14 sm:pt-36 lg:px-12 xl:px-14 2xl:px-16">
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -558,14 +602,12 @@ function CreateExperienceForm({
             </span>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-8"
-          >
-            <SectionCard
+          <form onSubmit={handleSubmit} className="relative space-y-8" aria-busy={isSubmitting}>
+            <fieldset disabled={isSubmitting} className="space-y-8 disabled:cursor-wait">
+              <SectionCard
               title="Thông tin cơ bản"
               description="Thiết lập những thông tin đầu tiên để du khách nhận ra trải nghiệm của bạn ngay từ cái nhìn đầu."
-            >
+              >
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field
                   label="Tiêu đề"
@@ -616,12 +658,12 @@ function CreateExperienceForm({
                   onToggle={toggleCategory}
                 />
               </div>
-            </SectionCard>
+              </SectionCard>
 
-            <SectionCard
+              <SectionCard
               title="Chi tiết trải nghiệm"
               description="Đây là phần kể chuyện chính. Hãy mô tả rõ hoạt động và những điều khiến hành trình của bạn đáng nhớ."
-            >
+              >
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field
                   label="Nội dung chi tiết"
@@ -661,13 +703,13 @@ function CreateExperienceForm({
                   placeholder="Ví dụ: View ruộng bậc thang"
                 />
               </div>
-            </SectionCard>
+              </SectionCard>
 
-          <SectionCard
-            title="Thiết lập giá & Lịch trình"
-            description="Chọn giá, thời lượng và cách hiển thị lịch trình để khách dễ hình dung nhịp trải nghiệm."
-          >
-            <div className="grid gap-5 sm:grid-cols-2">
+              <SectionCard
+                title="Thiết lập giá & Lịch trình"
+                description="Chọn giá, thời lượng và cách hiển thị lịch trình để khách dễ hình dung nhịp trải nghiệm."
+              >
+                <div className="grid gap-5 sm:grid-cols-2">
                 <Field
                   label="Giá"
                   className="field:price"
@@ -749,22 +791,22 @@ function CreateExperienceForm({
                 ) : null}
               </div>
 
-              <ItineraryFieldV2
-                scheduleType={form.scheduleType}
-                sections={itinerarySections}
-                onAdd={addItineraryItem}
-                onChange={updateItineraryField}
-                onRemove={removeItineraryItem}
-                canRemove={canRemoveItinerary}
-              />
-            </div>
-          </SectionCard>
+                  <ItineraryFieldV2
+                    scheduleType={form.scheduleType}
+                    sections={itinerarySections}
+                    onAdd={addItineraryItem}
+                    onChange={updateItineraryField}
+                    onRemove={removeItineraryItem}
+                    canRemove={canRemoveItinerary}
+                  />
+                </div>
+              </SectionCard>
 
-          <SectionCard
-            title="Hình ảnh trải nghiệm"
-            description="Chọn bộ ảnh đẹp nhất để kể câu chuyện thị giác và tăng sức hút cho bài đăng."
-          >
-            <div className="grid gap-5 sm:grid-cols-2">
+              <SectionCard
+                title="Hình ảnh trải nghiệm"
+                description="Chọn bộ ảnh đẹp nhất để kể câu chuyện thị giác và tăng sức hút cho bài đăng."
+              >
+                <div className="grid gap-5 sm:grid-cols-2">
               {isEditMode ? (
                 <ExistingImageStrip
                   images={form.existingImages}
@@ -786,35 +828,37 @@ function CreateExperienceForm({
                   onRemove={removeSelectedFile}
                 />
               </div>
-            </div>
-          </SectionCard>
+                </div>
+              </SectionCard>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                onClick={onCancel ?? onSuccess}
-                className="rounded-full border border-[#CFE3D7] bg-white px-5 py-3 text-sm font-semibold text-[#486152]"
-              >
-                Hủy và quay về trang chủ
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="rounded-full bg-[#2F5D46] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#2F5D46]/20 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {isSubmitting
-                  ? isEditMode
-                    ? "Đang cập nhật..."
-                    : "Đang gửi bài..."
-                  : isEditMode
-                    ? "Lưu thay đổi"
-                    : "Đăng bài trải nghiệm"}
-              </button>
-            </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={onCancel ?? onSuccess}
+                  className="rounded-full border border-[#CFE3D7] bg-white px-5 py-3 text-sm font-semibold text-[#486152]"
+                >
+                  Hủy và quay về trang chủ
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="rounded-full bg-[#2F5D46] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#2F5D46]/20 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSubmitting
+                    ? isEditMode
+                      ? "Đang cập nhật..."
+                      : "Đang gửi bài..."
+                    : isEditMode
+                      ? "Lưu thay đổi"
+                      : "Đăng bài trải nghiệm"}
+                </button>
+              </div>
+            </fieldset>
           </form>
         </div>
       </motion.section>
-    </div>
+      </div>
+    </>
   );
 }
 
