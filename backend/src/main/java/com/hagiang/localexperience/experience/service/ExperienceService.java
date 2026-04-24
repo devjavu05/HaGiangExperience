@@ -371,6 +371,7 @@ public class ExperienceService {
                 .imageUrls(experience.getImages().stream().map(ExperienceImage::getImageUrl).toList())
                 .ownerId(experience.getAuthor() != null ? experience.getAuthor().getId() : null)
                 .authorName(experience.getAuthor() != null ? experience.getAuthor().getUsername() : null)
+                .authorPhoneNumber(experience.getAuthor() != null ? experience.getAuthor().getPhoneNumber() : null)
                 .averageRating(reviews.isEmpty() ? 0.0 : roundToOneDecimal(averageRating))
                 .totalReviews(reviews.size())
                 .reviews(reviewResponses)

@@ -54,7 +54,7 @@ function ExperienceDetail({
   currentUser,
   onReviewSubmitted,
   onReplySubmitted,
-  onBook
+  onContact
 }) {
   const galleryImages = experience.imageUrls?.length
     ? experience.imageUrls
@@ -294,11 +294,11 @@ function ExperienceDetail({
                   <div className="relative">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
-                        Booking card
+                        Lien he host
                       </p>
                       <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1A3021] shadow-sm">
                         <ShieldCheck size={14} />
-                        Xác nhận nhanh
+                        Ket noi nhanh
                       </span>
                     </div>
 
@@ -332,7 +332,7 @@ function ExperienceDetail({
 
                   <div className="rounded-[24px] bg-[#FDF2E9] p-4 shadow-sm">
                     <p className="text-sm font-semibold text-[#1A3021]">
-                      Lý do khách thường đặt sớm
+                      Ly do nen lien he ngay
                     </p>
                     <ul className="mt-3 space-y-2.5 text-sm leading-6 text-slate-700">
                       <li className="flex items-start gap-2.5">
@@ -347,24 +347,23 @@ function ExperienceDetail({
                   </div>
 
                   <p className="text-sm leading-7 text-slate-600">
-                    Chỗ trống có thể không nhiều trong mùa đẹp. Nếu hành trình này đúng với cảm hứng
-                    của bạn, hãy giữ chỗ sớm để không bỏ lỡ một trải nghiệm chân thật và đáng nhớ giữa
-                    núi rừng Hà Giang.
+                    Neu trai nghiem nay dung voi cam hung cua ban, hay lien he truc tiep voi host
+                    qua Zalo de hoi lich trinh, ngay di va cach sap xep phu hop nhat cho chuyen di.
                   </p>
 
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
-                    onClick={onBook}
+                    onClick={onContact}
                     className="flex w-full items-center justify-center gap-3 rounded-full bg-[#1A3021] px-5 py-4 text-base font-semibold text-white shadow-md transition-all hover:bg-[#1A3021]/90 hover:shadow-lg hover:shadow-emerald-900/10"
                   >
-                    Đặt chỗ ngay
+                    Lien he ngay
                     <ArrowRight size={18} />
                   </motion.button>
 
                   <p className="text-center text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
-                    Tư vấn nhanh • Giữ chỗ sớm • Linh hoạt xác nhận
+                    Tu van nhanh • Nhan tin Zalo • Trao doi truc tiep
                   </p>
                 </div>
               </div>

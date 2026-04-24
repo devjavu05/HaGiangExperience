@@ -15,6 +15,8 @@ public class SchemaMigrationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        ensureUsersPhoneNumberColumn();
+
         if (columnExists("experiences", "image_url")) {
             jdbcTemplate.execute("ALTER TABLE experiences DROP COLUMN image_url");
         }
@@ -156,6 +158,27 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 columnName
         );
         return count != null && count > 0;
+    }
+
+    private void ensureUsersPhoneNumberColumn() {
+        if (!columnExists("users", "phone_number")) {
+            jdbcTemplate.execute("ALTER TABLE users ADD COLUMN phone_number VARCHAR(20) NULL");
+        }
+
+        jdbcTemplate.update(
+                """
+                UPDATE users
+                SET phone_number = CONCAT('000000', id)
+                WHERE phone_number IS NULL OR TRIM(phone_number) = ''
+                """
+        );
+
+        jdbcTemplate.execute("ALTER TABLE users MODIFY COLUMN phone_number VARCHAR(20) NOT NULL");
+        ensureIndex(
+                "users",
+                "uk_users_phone_number",
+                "CREATE UNIQUE INDEX uk_users_phone_number ON users(phone_number)"
+        );
     }
 
     private boolean indexExists(String tableName, String indexName) {

@@ -12,6 +12,7 @@ function AuthPage({ onSuccess, showToast }) {
     username: "",
     password: "",
     email: "",
+    phoneNumber: "",
     role: "ROLE_LOCAL_HOST"
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +62,7 @@ function AuthPage({ onSuccess, showToast }) {
         title: "Đăng ký thành công",
         message: "Tài khoản đã được tạo. Hãy đăng nhập để bắt đầu hành trình của bạn."
       });
+      setForm((current) => ({ ...current, password: "" }));
       setAuthMode("login");
     } catch (error) {
       showToast?.({
@@ -280,6 +282,19 @@ function RegisterForm({ form, isSubmitting, onChange, onSubmit }) {
             value={form.email}
             onChange={(event) => onChange("email", event.target.value)}
             placeholder="you@example.com"
+            className={inputClass()}
+          />
+        }
+      />
+
+      <AuthField
+        label="Số điện thoại"
+        input={
+          <input
+            type="tel"
+            value={form.phoneNumber}
+            onChange={(event) => onChange("phoneNumber", event.target.value)}
+            placeholder="Ví dụ: 0912345678"
             className={inputClass()}
           />
         }

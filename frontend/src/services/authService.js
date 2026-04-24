@@ -6,6 +6,7 @@ export async function login(payload) {
     user: {
       id: response.data.id,
       username: response.data.username,
+      phoneNumber: response.data.phoneNumber,
       role: response.data.role
     }
   };

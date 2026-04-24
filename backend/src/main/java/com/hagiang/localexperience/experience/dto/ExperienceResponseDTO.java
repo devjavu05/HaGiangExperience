@@ -23,6 +23,7 @@ public class ExperienceResponseDTO {
     private List<String> imageUrls;
     private Long ownerId;
     private String authorName;
+    private String authorPhoneNumber;
     private Double averageRating;
     private Integer totalReviews;
     private List<ReviewResponseDTO> reviews;
@@ -94,6 +95,10 @@ public class ExperienceResponseDTO {
 
     public String getAuthorName() {
         return authorName;
+    }
+
+    public String getAuthorPhoneNumber() {
+        return authorPhoneNumber;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -202,6 +207,11 @@ public class ExperienceResponseDTO {
 
         public Builder authorName(String authorName) {
             response.authorName = authorName;
+            return this;
+        }
+
+        public Builder authorPhoneNumber(String authorPhoneNumber) {
+            response.authorPhoneNumber = authorPhoneNumber;
             return this;
         }
 

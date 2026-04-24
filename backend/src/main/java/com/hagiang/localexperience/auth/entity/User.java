@@ -26,6 +26,9 @@ public class User {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
+    @Column(name = "phone_number", nullable = false, unique = true, length = 20)
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private Role role;
@@ -60,6 +63,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public Role getRole() {

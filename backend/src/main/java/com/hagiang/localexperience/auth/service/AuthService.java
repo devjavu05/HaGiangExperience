@@ -21,6 +21,7 @@ public class AuthService {
 
     public RegisterResponse register(RegisterRequest request) {
         validateRegisterRequest(request);
+        String normalizedPhoneNumber = normalizePhoneNumber(request.getPhoneNumber());
 
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
@@ -28,10 +29,14 @@ public class AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
+        if (userRepository.existsByPhoneNumber(normalizedPhoneNumber)) {
+            throw new IllegalArgumentException("Phone number already exists");
+        }
 
         User user = new User();
         user.setUsername(request.getUsername().trim());
         user.setEmail(request.getEmail().trim());
+        user.setPhoneNumber(normalizedPhoneNumber);
         user.setPassword(request.getPassword());
         user.setRole(parseRole(request.getRole()));
 
@@ -40,6 +45,7 @@ public class AuthService {
                 savedUser.getId(),
                 savedUser.getUsername(),
                 savedUser.getEmail(),
+                savedUser.getPhoneNumber(),
                 savedUser.getRole().name()
         );
     }
@@ -55,7 +61,7 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid username or password");
         }
 
-        return new AuthResponse(user.getId(), user.getUsername(), user.getRole().name());
+        return new AuthResponse(user.getId(), user.getUsername(), user.getPhoneNumber(), user.getRole().name());
     }
 
     private void validateRegisterRequest(RegisterRequest request) {
@@ -63,9 +69,27 @@ public class AuthService {
                 || !StringUtils.hasText(request.getUsername())
                 || !StringUtils.hasText(request.getPassword())
                 || !StringUtils.hasText(request.getEmail())
+                || !StringUtils.hasText(request.getPhoneNumber())
                 || !StringUtils.hasText(request.getRole())) {
-            throw new IllegalArgumentException("Username, password, email, and role are required");
+            throw new IllegalArgumentException("Username, password, email, phone number, and role are required");
         }
+    }
+
+    private String normalizePhoneNumber(String phoneNumber) {
+        if (!StringUtils.hasText(phoneNumber)) {
+            throw new IllegalArgumentException("Phone number is required");
+        }
+
+        String normalized = phoneNumber.replaceAll("[^\\d+]", "").trim();
+        if (normalized.startsWith("+")) {
+            normalized = normalized.substring(1);
+        }
+
+        if (!normalized.matches("\\d{9,15}")) {
+            throw new IllegalArgumentException("Phone number must contain 9 to 15 digits");
+        }
+
+        return normalized;
     }
 
     private Role parseRole(String roleValue) {

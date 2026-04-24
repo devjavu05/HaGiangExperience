@@ -6,8 +6,9 @@ import api, { toAbsoluteAssetUrl } from "../services/api";
 
 function formatPrice(price) {
   if (price === null || price === undefined || Number.isNaN(Number(price))) {
-    return "Liên hệ";
+    return "Lien he";
   }
+
   return `${new Intl.NumberFormat("vi-VN").format(Number(price))} VND`;
 }
 
@@ -27,7 +28,7 @@ function normalizeReview(review) {
   return {
     id: review.id,
     userId: review.userId,
-    username: review.username || "Người dùng",
+    username: review.username || "Nguoi dung",
     avatarUrl: review.avatarUrl ? toAbsoluteAssetUrl(review.avatarUrl) : "",
     rating: review.rating ?? 0,
     comment: review.comment ?? "",
@@ -77,11 +78,11 @@ function normalizeExperience(item) {
     activities: item.activities ?? [],
     highlights: item.highlights ?? [],
     itinerary,
-    duration: item.duration || "Đang cập nhật",
+    duration: item.duration || "Dang cap nhat",
     price: formatPrice(item.price),
     priceValue: item.price,
     imageUrls: (item.imageUrls ?? []).map(toAbsoluteAssetUrl),
-    location: item.address || "Hà Giang, Việt Nam",
+    location: item.address || "Ha Giang, Viet Nam",
     address: item.address || "",
     mapsPlaceId: item.mapsPlaceId || "",
     latitude: item.latitude ?? null,
@@ -91,9 +92,28 @@ function normalizeExperience(item) {
     totalReviews,
     reviews,
     ownerId: item.ownerId,
-    authorName: item.authorName || "Người dân bản địa",
+    authorName: item.authorName || "Nguoi dan ban dia",
+    authorPhoneNumber: item.authorPhoneNumber || "",
     createdAt: item.createdAt
   };
+}
+
+function normalizePhoneForZalo(phoneNumber) {
+  const normalized = String(phoneNumber ?? "").replace(/\D/g, "");
+
+  if (!normalized) {
+    return "";
+  }
+
+  if (normalized.startsWith("84")) {
+    return normalized;
+  }
+
+  if (normalized.startsWith("0")) {
+    return `84${normalized.slice(1)}`;
+  }
+
+  return normalized;
 }
 
 function ExperiencePage() {
@@ -110,7 +130,7 @@ function ExperiencePage() {
       setExperience(normalizeExperience(response.data));
       setError("");
     } catch (fetchError) {
-      setError(fetchError.response?.data?.message || "Không thể tải chi tiết trải nghiệm.");
+      setError(fetchError.response?.data?.message || "Khong the tai chi tiet trai nghiem.");
     } finally {
       setIsLoading(false);
     }
@@ -195,7 +215,7 @@ function ExperiencePage() {
   if (isLoading) {
     return (
       <div className="mx-auto w-full max-w-[1600px] px-6 py-24 text-stone-500 sm:px-8 lg:px-12 xl:px-14 2xl:px-16">
-        Đang tải trải nghiệm...
+        Dang tai trai nghiem...
       </div>
     );
   }
@@ -203,7 +223,7 @@ function ExperiencePage() {
   if (error || !experience) {
     return (
       <div className="mx-auto w-full max-w-[1600px] px-6 py-24 text-terracotta-700 sm:px-8 lg:px-12 xl:px-14 2xl:px-16">
-        {error || "Không tìm thấy trải nghiệm."}
+        {error || "Khong tim thay trai nghiem."}
       </div>
     );
   }
@@ -214,7 +234,15 @@ function ExperiencePage() {
       currentUser={user}
       onReviewSubmitted={handleReviewSubmitted}
       onReplySubmitted={handleReplySubmitted}
-      onBook={() => window.alert(`Đặt chỗ: ${experience.title}`)}
+      onContact={() => {
+        const zaloPhoneNumber = normalizePhoneForZalo(experience.authorPhoneNumber);
+        if (!zaloPhoneNumber) {
+          window.alert("Host chua cap nhat so dien thoai Zalo.");
+          return;
+        }
+
+        window.open(`https://zalo.me/${zaloPhoneNumber}`, "_blank", "noopener,noreferrer");
+      }}
     />
   );
 }
