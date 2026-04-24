@@ -359,7 +359,7 @@ function ExperienceDetail({
 
                   <div className="rounded-[24px] bg-[#FDF2E9] p-4 shadow-sm">
                     <p className="text-sm font-semibold text-[#1A3021]">
-                      Ly do nen lien he ngay
+                      Lý do bạn nên liên hệ ngay
                     </p>
                     <ul className="mt-3 space-y-2.5 text-sm leading-6 text-slate-700">
                       <li className="flex items-start gap-2.5">
