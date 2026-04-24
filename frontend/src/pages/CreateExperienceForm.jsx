@@ -200,9 +200,7 @@ function CreateExperienceForm({
 
       return {
         ...current,
-        categoryIds: isSelected
-          ? current.categoryIds.filter((id) => id !== category.id)
-          : current.categoryIds,
+        categoryIds: [],
         categorySlugs: isSelected
           ? current.categorySlugs.filter((slug) => slug !== category.slug)
           : [...current.categorySlugs, category.slug]
@@ -419,7 +417,7 @@ function CreateExperienceForm({
     if (!form.contentDetail.trim()) nextErrors.contentDetail = "Vui lòng nhập nội dung chi tiết.";
     if (!form.price || Number(form.price) <= 0) nextErrors.price = "Giá phải lớn hơn 0.";
     if (!form.address.trim()) nextErrors.address = "Vui lòng nhập địa chỉ trải nghiệm.";
-    if (!form.categoryIds.length) nextErrors.categoryIds = "Vui lòng chọn ít nhất 1 danh mục.";
+    if (!form.categorySlugs.length) nextErrors.categoryIds = "Vui lòng chọn ít nhất 1 danh mục.";
     if (totalImages === 0) nextErrors.files = "Vui lòng giữ lại hoặc tải lên ít nhất 1 ảnh.";
     if (form.scheduleType === "hourly" && (!form.hourCount || Number(form.hourCount) <= 0)) {
       nextErrors.hourCount = "Vui lòng nhập số giờ hợp lệ.";
