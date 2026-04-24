@@ -317,7 +317,7 @@ function ExperienceDetail({
                   <div className="relative">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
-                        Lien he host
+                        LIÊN HỆ HOST
                       </p>
                       <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1A3021] shadow-sm">
                         <ShieldCheck size={14} />
