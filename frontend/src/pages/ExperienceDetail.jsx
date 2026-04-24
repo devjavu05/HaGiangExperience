@@ -491,6 +491,14 @@ function EnhancedItineraryTimeline({ itinerary }) {
   const [activeDay, setActiveDay] = useState(() => sections[0]?.dayNumber ?? 1);
   const activeSection =
     sections.find((section) => section.dayNumber === activeDay) ?? sections[0];
+  const timelineContainerRef = useRef(null);
+  const iconRefs = useRef([]);
+  const [timelineMetrics, setTimelineMetrics] = useState({
+    width: 160,
+    height: 48,
+    path: "",
+    endPoint: { x: 80, y: 24 },
+  });
 
   useEffect(() => {
     if (!sections.length) {
@@ -504,6 +512,59 @@ function EnhancedItineraryTimeline({ itinerary }) {
       setActiveDay(sections[0].dayNumber);
     }
   }, [activeDay, sections]);
+
+  useEffect(() => {
+    const container = timelineContainerRef.current;
+    if (!container || !activeSection?.items?.length) {
+      setTimelineMetrics({
+        width: 160,
+        height: 48,
+        path: "",
+        endPoint: { x: 80, y: 24 },
+      });
+      return undefined;
+    }
+
+    const updateTimelineMetrics = () => {
+      const containerRect = container.getBoundingClientRect();
+      const iconPoints = iconRefs.current
+        .filter(Boolean)
+        .map((icon) => {
+          const iconRect = icon.getBoundingClientRect();
+          return {
+            x: iconRect.left - containerRect.left + iconRect.width / 2,
+            y: iconRect.top - containerRect.top + iconRect.height / 2,
+          };
+        });
+
+      if (!iconPoints.length) {
+        return;
+      }
+
+      const endPoint = iconPoints[iconPoints.length - 1];
+      setTimelineMetrics({
+        width: Math.max(containerRect.width, 160),
+        height: Math.max(containerRect.height, endPoint.y + 40),
+        path: buildMeasuredZigzagPath(iconPoints),
+        endPoint,
+      });
+    };
+
+    const frameId = window.requestAnimationFrame(updateTimelineMetrics);
+    const resizeObserver = new ResizeObserver(() => {
+      window.requestAnimationFrame(updateTimelineMetrics);
+    });
+
+    resizeObserver.observe(container);
+    iconRefs.current.filter(Boolean).forEach((icon) => resizeObserver.observe(icon));
+    window.addEventListener("resize", updateTimelineMetrics);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateTimelineMetrics);
+    };
+  }, [activeDay, activeSection]);
 
   return (
     <section className="mb-12 rounded-[30px] border border-slate-100 bg-white px-6 py-10 shadow-sm sm:px-8">
@@ -567,62 +628,70 @@ function EnhancedItineraryTimeline({ itinerary }) {
                 </div>
               </div>
 
-              <div className="relative rounded-[28px] bg-[#F9F6F2]/65 px-4 py-5 sm:px-5">
+              <div
+                ref={timelineContainerRef}
+                className="relative rounded-[28px] bg-[#F9F6F2]/65 px-4 py-5 sm:px-5"
+              >
                 <div
-                  className="absolute left-1/2 top-5 hidden w-[160px] -translate-x-1/2 md:block"
-                  style={{
-                    height: `${getZigzagHeight(activeSection?.items.length ?? 0)}px`,
-                  }}
+                  className="pointer-events-none absolute inset-0 hidden md:block"
+                  aria-hidden="true"
                 >
                   <svg
-                    viewBox={`0 0 160 ${getZigzagHeight(activeSection?.items.length ?? 0)}`}
+                    viewBox={`0 0 ${Math.max(timelineMetrics.width, 1)} ${Math.max(timelineMetrics.height, 1)}`}
+                    width="100%"
+                    height="100%"
                     className="h-full w-full overflow-visible"
                     preserveAspectRatio="none"
-                    aria-hidden="true"
                   >
-                    <path
-                      d={buildZigzagPath(activeSection?.items.length ?? 0)}
-                      fill="none"
-                      stroke="#D7E9DF"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                    <motion.path
-                      key={`path-${activeSection?.dayNumber ?? 0}`}
-                      d={buildZigzagPath(activeSection?.items.length ?? 0)}
-                      fill="none"
-                      stroke="#9BC4AE"
-                      strokeWidth="3.5"
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 0.4 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ duration: 0.9, ease: "easeOut" }}
-                    />
-                    <circle
-                      cx="80"
-                      cy={getZigzagEndY(activeSection?.items.length ?? 0)}
-                      r="8"
-                      fill="url(#timeline-end-node)"
-                    />
-                    <defs>
-                      <radialGradient
-                        id="timeline-end-node"
-                        cx="50%"
-                        cy="50%"
-                        r="65%"
-                      >
-                        <stop
-                          offset="0%"
-                          stopColor="#9BC4AE"
-                          stopOpacity="0.95"
+                    {timelineMetrics.path ? (
+                      <>
+                        <path
+                          d={timelineMetrics.path}
+                          fill="none"
+                          stroke="#D7E9DF"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
-                        <stop
-                          offset="100%"
-                          stopColor="#9BC4AE"
-                          stopOpacity="0.18"
+                        <motion.path
+                          key={`path-${activeSection?.dayNumber ?? 0}`}
+                          d={timelineMetrics.path}
+                          fill="none"
+                          stroke="#9BC4AE"
+                          strokeWidth="3.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          initial={{ pathLength: 0, opacity: 0.4 }}
+                          animate={{ pathLength: 1, opacity: 1 }}
+                          transition={{ duration: 0.9, ease: "easeOut" }}
                         />
-                      </radialGradient>
-                    </defs>
+                        <circle
+                          cx={timelineMetrics.endPoint.x}
+                          cy={timelineMetrics.endPoint.y}
+                          r="8"
+                          fill="url(#timeline-end-node)"
+                        />
+                        <defs>
+                          <radialGradient
+                            id="timeline-end-node"
+                            cx="50%"
+                            cy="50%"
+                            r="65%"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor="#9BC4AE"
+                              stopOpacity="0.95"
+                            />
+                            <stop
+                              offset="100%"
+                              stopColor="#9BC4AE"
+                              stopOpacity="0.18"
+                            />
+                          </radialGradient>
+                        </defs>
+                      </>
+                    ) : null}
                   </svg>
                 </div>
 
@@ -653,7 +722,12 @@ function EnhancedItineraryTimeline({ itinerary }) {
                           {index !== activeSection.items.length - 1 ? (
                             <div className="absolute left-[28px] top-[42px] h-[calc(100%+1.5rem)] w-px bg-gradient-to-b from-[#CFE3D7] to-transparent md:hidden" />
                           ) : null}
-                          <div className="absolute left-[9px] top-2.5 flex h-10 w-10 items-center justify-center rounded-full border-4 border-white bg-[#E8F3EE] shadow-sm shadow-emerald-900/10 md:left-1/2 md:z-10 md:h-12 md:w-12 md:-translate-x-1/2">
+                          <div
+                            ref={(node) => {
+                              iconRefs.current[index] = node;
+                            }}
+                            className="absolute left-[9px] top-2.5 flex h-10 w-10 items-center justify-center rounded-full border-4 border-white bg-[#E8F3EE] shadow-sm shadow-emerald-900/10 md:left-1/2 md:z-10 md:h-12 md:w-12 md:-translate-x-1/2"
+                          >
                             {renderItineraryIcon(item)}
                           </div>
 
@@ -1124,47 +1198,27 @@ function extractDayLabel(item) {
   return "Lịch trình";
 }
 
-function buildZigzagPath(itemCount) {
-  const step = 180;
-  const centerX = 80;
-  const amplitude = 34;
-  const startY = 24;
-  const tailLength = 18;
-  const anchorY = getZigzagAnchorY(itemCount);
-  const endY = getZigzagEndY(itemCount);
-  let path = `M ${centerX} ${startY}`;
-
-  for (let index = 0; index < Math.max(itemCount - 1, 0); index += 1) {
-    const currentY = startY + index * step;
-    const nextY = startY + (index + 1) * step;
-    const targetX = index % 2 === 0 ? centerX - amplitude : centerX + amplitude;
-    const midY = currentY + step / 2;
-
-    path += ` C ${centerX} ${currentY + 40}, ${targetX} ${midY - 30}, ${targetX} ${midY}`;
-    path += ` S ${centerX} ${nextY - 40}, ${centerX} ${nextY}`;
+function buildMeasuredZigzagPath(points) {
+  if (!points.length) {
+    return "";
   }
 
-  if (itemCount > 0) {
-    path += ` L ${centerX} ${anchorY + tailLength}`;
-    path += ` L ${centerX} ${endY}`;
+  if (points.length === 1) {
+    const point = points[0];
+    return `M ${point.x} ${point.y} L ${point.x} ${point.y}`;
+  }
+
+  let path = `M ${points[0].x} ${points[0].y}`;
+
+  for (let index = 1; index < points.length; index += 1) {
+    const previousPoint = points[index - 1];
+    const currentPoint = points[index];
+    const midY = previousPoint.y + (currentPoint.y - previousPoint.y) / 2;
+
+    path += ` C ${previousPoint.x} ${midY}, ${currentPoint.x} ${midY}, ${currentPoint.x} ${currentPoint.y}`;
   }
 
   return path;
-}
-
-function getZigzagAnchorY(itemCount) {
-  const step = 180;
-  const startY = 24;
-  return startY + Math.max(itemCount - 1, 0) * step;
-}
-
-function getZigzagEndY(itemCount) {
-  const tailLength = 18;
-  return getZigzagAnchorY(itemCount) + (itemCount > 0 ? tailLength : 0);
-}
-
-function getZigzagHeight(itemCount) {
-  return Math.max(getZigzagEndY(itemCount) + 24, 48);
 }
 
 function renderItineraryIcon(item) {
