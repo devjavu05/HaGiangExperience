@@ -12,66 +12,8 @@ import {
   X
 } from "lucide-react";
 import MultiImageUpload from "../components/experience/MultiImageUpload";
+import { EXPERIENCE_CATEGORY_OPTIONS as CATEGORY_OPTIONS } from "../constants/experienceCategories";
 import { createExperience, updateExperience } from "../services/experienceService";
-
-const CATEGORY_OPTIONS = [
-  {
-    id: 1,
-    slug: "culture",
-    label: "Văn hóa & Đời sống",
-    className: "border-[#CFE3D7] bg-[#E8F3EE] text-[#1A3021]",
-    activeClass: "border-[#1A3021] bg-[#D7E9DF] text-[#1A3021]"
-  },
-  {
-    id: 2,
-    slug: "adventure",
-    label: "Chinh phục & Khám phá",
-    className: "border-[#D6E9FB] bg-[#EBF5FF] text-[#1D4E89]",
-    activeClass: "border-[#1D4E89] bg-[#D6E9FB] text-[#1D4E89]"
-  },
-  {
-    id: 3,
-    slug: "healing",
-    label: "Nghỉ dưỡng & Chữa lành",
-    className: "border-[#E5D5FA] bg-[#F3E8FF] text-[#6B3FA0]",
-    activeClass: "border-[#6B3FA0] bg-[#E5D5FA] text-[#6B3FA0]"
-  },
-  {
-    id: 4,
-    slug: "foodie",
-    label: "Ẩm thực bản địa",
-    className: "border-[#F1DEB6] bg-[#FFF5DC] text-[#9A6A18]",
-    activeClass: "border-[#C6922D] bg-[#F7E8BF] text-[#7A5312]"
-  },
-  {
-    id: 5,
-    slug: "craft",
-    label: "Thủ Công & Truyền Thống",
-    className: "border-[#E7DCC8] bg-[#F6F0E7] text-[#7B5A2E]",
-    activeClass: "border-[#7B5A2E] bg-[#EBDDCC] text-[#6A4A21]"
-  },
-  {
-    id: 6,
-    slug: "agriculture",
-    label: "Nông nghiệp",
-    className: "border-[#D7E8B8] bg-[#F1F7E3] text-[#557A1F]",
-    activeClass: "border-[#557A1F] bg-[#E3EECC] text-[#476619]"
-  },
-  {
-    id: 7,
-    slug: "nature",
-    label: "Thiên nhiên",
-    className: "border-[#CFE7E2] bg-[#EAF7F4] text-[#1E6B60]",
-    activeClass: "border-[#1E6B60] bg-[#D7EEE8] text-[#15564C]"
-  },
-  {
-    id: 8,
-    slug: "community",
-    label: "Du lịch cộng đồng",
-    className: "border-[#E5D6C8] bg-[#F7F0EA] text-[#7A5230]",
-    activeClass: "border-[#7A5230] bg-[#EADBCB] text-[#654226]"
-  }
-];
 
 const initialForm = {
   title: "",

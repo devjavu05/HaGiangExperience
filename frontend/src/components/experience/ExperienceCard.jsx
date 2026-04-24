@@ -1,52 +1,6 @@
-import {
-  Clock3,
-  Hammer,
-  Leaf,
-  MapPinned,
-  Mountain,
-  Sprout,
-  Trees,
-  UserRound,
-  Users,
-  Utensils,
-  Wind
-} from "lucide-react";
+import { Clock3, MapPinned, UserRound } from "lucide-react";
 import { motion } from "framer-motion";
-
-const CATEGORY_STYLES = {
-  culture: {
-    icon: Leaf,
-    className: "border-[#CFE3D7] bg-[#E8F3EE] text-[#1A3021]"
-  },
-  adventure: {
-    icon: Mountain,
-    className: "border-[#D6E9FB] bg-[#EBF5FF] text-[#1D4E89]"
-  },
-  healing: {
-    icon: Wind,
-    className: "border-[#E5D5FA] bg-[#F3E8FF] text-[#6B3FA0]"
-  },
-  foodie: {
-    icon: Utensils,
-    className: "border-[#F2DCCB] bg-[#FDF2E9] text-[#9C4F2B]"
-  },
-  craft: {
-    icon: Hammer,
-    className: "border-[#E7DCC8] bg-[#F6F0E7] text-[#7B5A2E]"
-  },
-  agriculture: {
-    icon: Sprout,
-    className: "border-[#D7E8B8] bg-[#F1F7E3] text-[#557A1F]"
-  },
-  nature: {
-    icon: Trees,
-    className: "border-[#CFE7E2] bg-[#EAF7F4] text-[#1E6B60]"
-  },
-  community: {
-    icon: Users,
-    className: "border-[#E5D6C8] bg-[#F7F0EA] text-[#7A5230]"
-  }
-};
+import { EXPERIENCE_CATEGORY_STYLES as CATEGORY_STYLES } from "../../constants/experienceCategories";
 
 function ExperienceCard({ experience, isActive, onSelect, canManage, onEdit, onDelete }) {
   const coverImage = experience.imageUrls?.[0] ?? experience.imageUrl;

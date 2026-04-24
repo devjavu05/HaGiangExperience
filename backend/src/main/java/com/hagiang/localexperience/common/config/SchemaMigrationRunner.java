@@ -143,9 +143,11 @@ public class SchemaMigrationRunner implements CommandLineRunner {
         seedCategory("Nghỉ dưỡng & Chữa lành", "healing", "#F3E8FF");
         seedCategory("Ẩm thực bản địa", "foodie", "#FDF2E9");
         seedCategory("Thủ Công & Truyền Thống", "craft", "#F6F0E7");
-        seedCategory("Nông nghiệp", "agriculture", "#F1F7E3");
-        seedCategory("Thiên nhiên", "nature", "#EAF7F4");
-        seedCategory("Du lịch cộng đồng", "community", "#F7F0EA");
+        seedCategory("Nghệ thuật & Trang phục", "art-costume", "#FFF1F6");
+        seedCategory("Trải nghiệm địa phương", "local-experience", "#F2F8EC");
+        seedCategory("Check-in cảnh quan", "landscape-checkin", "#EEF9FC");
+        seedCategory("Văn hoá – Lễ hội", "festival-culture", "#FFF7E8");
+        seedCategory("Phong tục – Tập quán", "customs", "#F5F1FF");
     }
 
     private boolean columnExists(String tableName, String columnName) {
