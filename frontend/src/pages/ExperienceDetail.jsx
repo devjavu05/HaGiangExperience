@@ -321,7 +321,7 @@ function ExperienceDetail({
                       </p>
                       <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1A3021] shadow-sm">
                         <ShieldCheck size={14} />
-                        Ket noi nhanh
+                        Kết nối nhanh chóng
                       </span>
                     </div>
 

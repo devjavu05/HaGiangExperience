@@ -24,15 +24,15 @@ function ProfilePage({ showToast }) {
       updateUser(authPayload.user);
       showToast?.({
         type: "success",
-        title: "Cap nhat thanh cong",
-        message: "So dien thoai cua ban da duoc cap nhat."
+        title: "Cập nhật thành công",
+        message: "Số điện thoại của bạn đã được cập nhật."
       });
     } catch (error) {
       showToast?.({
         type: "error",
-        title: "Cap nhat that bai",
+        title: "Cập nhật thất bại",
         message:
-          error.response?.data?.message || "Khong the cap nhat so dien thoai luc nay."
+          error.response?.data?.message || "Không thể cập nhật số điện thoại lúc này."
       });
     } finally {
       setIsSubmitting(false);
@@ -43,11 +43,11 @@ function ProfilePage({ showToast }) {
     <div className="mx-auto min-h-[60vh] max-w-4xl px-4 pb-16 pt-36 sm:px-6 lg:px-8">
       <div className="rounded-[2rem] border border-clay-200 bg-white/95 p-8 shadow-xl shadow-stone-950/5">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-forest-700">
-          Trang ca nhan
+          Trang cá nhân
         </p>
         <h2 className="mt-3 text-3xl font-semibold text-stone-900">Quan ly ho so cua ban</h2>
         <p className="mt-4 max-w-2xl text-base leading-7 text-stone-600">
-          Ban co the cap nhat so dien thoai de nguoi dung lien he truc tiep qua Zalo khi xem bai dang.
+         Bạn có thể sửa số điện thoại zalo để khách hàng có thể liên hệ trực tiếp cho bạn.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -66,7 +66,7 @@ function ProfilePage({ showToast }) {
 
         <form onSubmit={handleSubmit} className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
           <label className="block text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-            So dien thoai Zalo
+            Số điện thoại Zalo
           </label>
           <div className="mt-3 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
             <Phone size={18} className="text-forest-700" />
@@ -80,7 +80,7 @@ function ProfilePage({ showToast }) {
             />
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-500">
-            So nay se duoc dung cho nut "Lien he ngay" de mo Zalo cua ban.
+            Số điện thoại này sẽ được dùng để khách hàng liên hệ cho bạn.
           </p>
 
           <button
