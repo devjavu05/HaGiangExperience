@@ -1129,6 +1129,7 @@ function buildZigzagPath(itemCount) {
   const centerX = 80;
   const amplitude = 34;
   const startY = 24;
+  const tailLength = 42;
   let path = `M ${centerX} ${startY}`;
 
   for (let index = 0; index < Math.max(itemCount - 1, 0); index += 1) {
@@ -1141,13 +1142,19 @@ function buildZigzagPath(itemCount) {
     path += ` S ${centerX} ${nextY - 40}, ${centerX} ${nextY}`;
   }
 
+  if (itemCount > 0) {
+    const endY = startY + Math.max(itemCount - 1, 0) * step;
+    path += ` C ${centerX} ${endY + 12}, ${centerX} ${endY + 28}, ${centerX} ${endY + tailLength}`;
+  }
+
   return path;
 }
 
 function getZigzagEndY(itemCount) {
   const step = 180;
   const startY = 24;
-  return startY + Math.max(itemCount - 1, 0) * step;
+  const tailLength = 42;
+  return startY + Math.max(itemCount - 1, 0) * step + (itemCount > 0 ? tailLength : 0);
 }
 
 function getZigzagHeight(itemCount) {
