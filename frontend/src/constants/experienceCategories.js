@@ -1,13 +1,11 @@
 import {
   Camera,
-  Flower2,
   Hammer,
   Leaf,
-  Map,
+  MapPinned,
   Mountain,
-  PartyPopper,
-  Shirt,
   Sparkles,
+  Users,
   Utensils,
   Wind
 } from "lucide-react";
@@ -68,7 +66,7 @@ export const EXPERIENCE_CATEGORY_OPTIONS = [
     slug: "art-costume",
     label: "Nghệ thuật & Trang phục",
     shortLabel: "Nghệ thuật",
-    icon: Shirt,
+    icon: Sparkles,
     className: "border-[#F1D8E4] bg-[#FFF1F6] text-[#A54874]",
     activeClass: "border-[#A54874] bg-[#F8DDE8] text-[#8D355F]",
     inactiveClass: "bg-[#FFF1F6] text-[#A54874] border-[#F1D8E4]"
@@ -78,7 +76,7 @@ export const EXPERIENCE_CATEGORY_OPTIONS = [
     slug: "local-experience",
     label: "Trải nghiệm địa phương",
     shortLabel: "Địa phương",
-    icon: Map,
+    icon: MapPinned,
     className: "border-[#D7E6CC] bg-[#F2F8EC] text-[#4E6B2E]",
     activeClass: "border-[#4E6B2E] bg-[#E2EDD5] text-[#3E5722]",
     inactiveClass: "bg-[#F2F8EC] text-[#4E6B2E] border-[#D7E6CC]"
@@ -98,7 +96,7 @@ export const EXPERIENCE_CATEGORY_OPTIONS = [
     slug: "festival-culture",
     label: "Văn hoá – Lễ hội",
     shortLabel: "Lễ hội",
-    icon: PartyPopper,
+    icon: Users,
     className: "border-[#F4DEB9] bg-[#FFF7E8] text-[#9B6A11]",
     activeClass: "border-[#9B6A11] bg-[#F8E9C7] text-[#7F550A]",
     inactiveClass: "bg-[#FFF7E8] text-[#9B6A11] border-[#F4DEB9]"
@@ -108,7 +106,7 @@ export const EXPERIENCE_CATEGORY_OPTIONS = [
     slug: "customs",
     label: "Phong tục – Tập quán",
     shortLabel: "Phong tục",
-    icon: Flower2,
+    icon: Leaf,
     className: "border-[#D9D2F3] bg-[#F5F1FF] text-[#5C479A]",
     activeClass: "border-[#5C479A] bg-[#E7DFFC] text-[#49357F]",
     inactiveClass: "bg-[#F5F1FF] text-[#5C479A] border-[#D9D2F3]"

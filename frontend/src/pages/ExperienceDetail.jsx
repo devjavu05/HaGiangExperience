@@ -11,6 +11,7 @@ import {
   Coffee,
   ExternalLink,
   Footprints,
+  Leaf,
   MapPinned,
   Mountain,
   MoonStar,
@@ -44,6 +45,8 @@ function ExperienceDetail({
   const itinerary = experience.itinerary ?? [];
   const categories = experience.categories ?? [];
   const reviews = experience.reviews ?? [];
+  const activities = experience.activities ?? [];
+  const highlights = experience.highlights ?? [];
 
   const hasLocation = Boolean(experience.address || experience.location);
   const locationText = experience.address || experience.location;
@@ -188,7 +191,7 @@ function ExperienceDetail({
                       Hoạt động
                     </h2>
                     <ul className="mt-6 space-y-3.5">
-                      {experience.activities.map((item) => (
+                      {activities.map((item) => (
                         <li
                           key={item}
                           className="flex items-start gap-3 text-sm leading-7 text-slate-600"
@@ -218,7 +221,7 @@ function ExperienceDetail({
                       Điểm nhấn
                     </h2>
                     <ul className="mt-6 space-y-3.5">
-                      {experience.highlights.map((item) => (
+                      {highlights.map((item) => (
                         <li
                           key={item}
                           className="flex items-start gap-3 text-sm leading-7 text-slate-600"
