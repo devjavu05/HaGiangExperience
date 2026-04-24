@@ -1130,6 +1130,8 @@ function buildZigzagPath(itemCount) {
   const amplitude = 34;
   const startY = 24;
   const tailLength = 42;
+  const anchorY = getZigzagAnchorY(itemCount);
+  const endY = getZigzagEndY(itemCount);
   let path = `M ${centerX} ${startY}`;
 
   for (let index = 0; index < Math.max(itemCount - 1, 0); index += 1) {
@@ -1143,18 +1145,22 @@ function buildZigzagPath(itemCount) {
   }
 
   if (itemCount > 0) {
-    const endY = startY + Math.max(itemCount - 1, 0) * step;
-    path += ` C ${centerX} ${endY + 12}, ${centerX} ${endY + 28}, ${centerX} ${endY + tailLength}`;
+    path += ` L ${centerX} ${anchorY + tailLength}`;
+    path += ` L ${centerX} ${endY}`;
   }
 
   return path;
 }
 
-function getZigzagEndY(itemCount) {
+function getZigzagAnchorY(itemCount) {
   const step = 180;
   const startY = 24;
+  return startY + Math.max(itemCount - 1, 0) * step;
+}
+
+function getZigzagEndY(itemCount) {
   const tailLength = 42;
-  return startY + Math.max(itemCount - 1, 0) * step + (itemCount > 0 ? tailLength : 0);
+  return getZigzagAnchorY(itemCount) + (itemCount > 0 ? tailLength : 0);
 }
 
 function getZigzagHeight(itemCount) {
