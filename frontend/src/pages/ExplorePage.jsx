@@ -46,7 +46,7 @@ function normalizeExperience(item) {
   };
 }
 
-function ExplorePage({ currentUser, onEditExperience, onDeleteExperience }) {
+function ExplorePage({ currentUser, onEditExperience, onDeleteExperience, deletedExperienceId = null }) {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [minPrice, setMinPrice] = useState("");
@@ -85,6 +85,14 @@ function ExplorePage({ currentUser, onEditExperience, onDeleteExperience }) {
 
     return () => window.clearTimeout(timeoutId);
   }, [searchValue, minPrice, maxPrice, selectedCategories, sortValue]);
+
+  useEffect(() => {
+    if (!deletedExperienceId) {
+      return;
+    }
+
+    setExperiences((current) => current.filter((experience) => experience.id !== deletedExperienceId));
+  }, [deletedExperienceId]);
 
   const displayedExperiences = useMemo(() => {
     const filteredByRating = selectedRating

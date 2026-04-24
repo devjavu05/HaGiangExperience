@@ -30,6 +30,8 @@ function AppContent() {
   const location = useLocation();
   const [toast, setToast] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeletingExperience, setIsDeletingExperience] = useState(false);
+  const [deletedExperienceId, setDeletedExperienceId] = useState(null);
 
   function showToast(config) {
     const nextToast = {
@@ -54,15 +56,18 @@ function AppContent() {
   }
 
   async function handleConfirmDelete() {
-    if (!deleteTarget) return;
+    if (!deleteTarget || isDeletingExperience) return;
 
     try {
+      setIsDeletingExperience(true);
+      const deletedId = deleteTarget.id;
       await deleteExperience(deleteTarget.id);
       showToast({
         type: "success",
         title: "Xóa thành công",
         message: "Bài viết và các tệp ảnh liên quan đã được xóa."
       });
+      setDeletedExperienceId(deletedId);
       setDeleteTarget(null);
       await refreshExperiences();
       if (location.pathname.startsWith("/experience/")) {
@@ -74,6 +79,8 @@ function AppContent() {
         title: "Xóa thất bại",
         message: errorResponse.response?.data?.message || "Không thể xóa bài viết lúc này."
       });
+    } finally {
+      setIsDeletingExperience(false);
     }
   }
 
@@ -85,8 +92,12 @@ function AppContent() {
         title="Xác nhận xóa bài viết"
         message={`Bạn có chắc chắn muốn xóa trải nghiệm ${deleteTarget?.title?.toLowerCase() ?? ""} không?`}
         confirmLabel="Xóa bài viết"
-        onCancel={() => setDeleteTarget(null)}
+        onCancel={() => {
+          if (isDeletingExperience) return;
+          setDeleteTarget(null);
+        }}
         onConfirm={handleConfirmDelete}
+        isLoading={isDeletingExperience}
       />
 
       <Routes>
@@ -121,6 +132,7 @@ function AppContent() {
             element={
               <ExplorePage
                 currentUser={user}
+                deletedExperienceId={deletedExperienceId}
                 onEditExperience={(experience) => navigate(`/experience/${experience.id}/edit`)}
                 onDeleteExperience={(experience) => setDeleteTarget(experience)}
               />
@@ -132,6 +144,7 @@ function AppContent() {
             element={
               <MyExperiences
                 showToast={showToast}
+                deletedExperienceId={deletedExperienceId}
                 onEditExperience={(experience) => navigate(`/experience/${experience.id}/edit`)}
                 onDeleteExperienceRequest={(experience) => setDeleteTarget(experience)}
               />

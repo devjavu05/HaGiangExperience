@@ -42,7 +42,13 @@ function formatDate(dateString) {
   }).format(new Date(dateString));
 }
 
-function MyExperiences({ onEditExperience, onDeleteExperienceRequest, refreshSignal = 0, showToast }) {
+function MyExperiences({
+  onEditExperience,
+  onDeleteExperienceRequest,
+  refreshSignal = 0,
+  deletedExperienceId = null,
+  showToast
+}) {
   const [experiences, setExperiences] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -50,6 +56,14 @@ function MyExperiences({ onEditExperience, onDeleteExperienceRequest, refreshSig
   useEffect(() => {
     fetchMyExperiences();
   }, [refreshSignal]);
+
+  useEffect(() => {
+    if (!deletedExperienceId) {
+      return;
+    }
+
+    setExperiences((current) => current.filter((experience) => experience.id !== deletedExperienceId));
+  }, [deletedExperienceId]);
 
   async function fetchMyExperiences() {
     try {
