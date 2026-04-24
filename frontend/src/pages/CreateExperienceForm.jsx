@@ -186,7 +186,7 @@ function CreateExperienceForm({
   const isEditMode = mode === "edit";
   const previewCoverImage = previews[0]?.url ?? form.existingImages[0]?.previewUrl ?? "";
   const previewCategoryLabels = CATEGORY_OPTIONS.filter((category) =>
-    form.categoryIds.includes(category.id)
+    form.categorySlugs.includes(category.slug)
   ).map((category) => category.label);
 
   function updateField(field, value) {
@@ -196,13 +196,13 @@ function CreateExperienceForm({
 
   function toggleCategory(category) {
     setForm((current) => {
-      const isSelected = current.categoryIds.includes(category.id);
+      const isSelected = current.categorySlugs.includes(category.slug);
 
       return {
         ...current,
         categoryIds: isSelected
           ? current.categoryIds.filter((id) => id !== category.id)
-          : [...current.categoryIds, category.id],
+          : current.categoryIds,
         categorySlugs: isSelected
           ? current.categorySlugs.filter((slug) => slug !== category.slug)
           : [...current.categorySlugs, category.slug]
@@ -512,7 +512,7 @@ function CreateExperienceForm({
         activities: cleanedActivities,
         highlights: cleanedHighlights,
         itinerary: cleanedItinerary,
-        categoryIds: form.categoryIds,
+        categoryIds: [],
         categorySlugs: form.categorySlugs
       };
 
@@ -681,7 +681,7 @@ function CreateExperienceForm({
                 />
 
                 <CategoryChipsField
-                  selectedIds={form.categoryIds}
+                  selectedSlugs={form.categorySlugs}
                   error={visibleErrors.categoryIds}
                   onToggle={toggleCategory}
                 />
@@ -1211,7 +1211,7 @@ function Field({ label, input, error, className = "", helperText = "" }) {
   );
 }
 
-function CategoryChipsField({ selectedIds, error, onToggle }) {
+function CategoryChipsField({ selectedSlugs, error, onToggle }) {
   return (
     <div
       data-field="categoryIds"
@@ -1235,11 +1235,11 @@ function CategoryChipsField({ selectedIds, error, onToggle }) {
 
       <div className="flex flex-wrap gap-3">
         {CATEGORY_OPTIONS.map((category) => {
-          const isSelected = selectedIds.includes(category.id);
+          const isSelected = selectedSlugs.includes(category.slug);
 
           return (
             <button
-              key={category.id}
+              key={category.slug}
               type="button"
               onClick={() => onToggle(category)}
               className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
