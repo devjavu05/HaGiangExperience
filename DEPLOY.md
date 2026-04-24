@@ -63,17 +63,18 @@ After deploy, Render will give you a backend URL like:
 https://hagiang-backend.onrender.com
 ```
 
-## 3. Deploy frontend on Netlify
+## 3. Deploy frontend on Vercel
 
-This repo already includes [frontend/netlify.toml](/d:/Web%20DLDT/frontend/netlify.toml:1) for SPA routing.
+This repo now includes [frontend/vercel.json](/d:/Web%20DLDT/frontend/vercel.json:1) for SPA routing.
 
-Netlify settings:
+Vercel settings:
 
-- Base directory: `frontend`
+- Framework preset: `Vite`
+- Root directory: `frontend`
 - Build command: `npm run build`
-- Publish directory: `frontend/dist`
+- Output directory: `dist`
 
-Set these environment variables in Netlify before the first build:
+Set these environment variables in Vercel before the first build:
 
 ```env
 VITE_API_BASE_URL=https://hagiang-backend.onrender.com
@@ -85,25 +86,25 @@ VITE_GOOGLE_MAPS_API_KEY=your_google_maps_key
 
 ## 4. Connect both sides
 
-After Netlify generates your site URL, update Render:
+After Vercel generates your site URL, update Render:
 
-- `APP_CORS_ALLOWED_ORIGINS=https://your-site.netlify.app`
+- `APP_CORS_ALLOWED_ORIGINS=https://your-site.vercel.app`
 
-Then redeploy the Render service once so CORS matches the real Netlify domain.
+Then redeploy the Render service once so CORS matches the real Vercel domain.
 
 If you later add a custom domain, update:
 
 - Render `APP_CORS_ALLOWED_ORIGINS`
-- Netlify `VITE_API_BASE_URL`
-- Netlify `VITE_ASSET_BASE_URL`
+- Vercel `VITE_API_BASE_URL`
+- Vercel `VITE_ASSET_BASE_URL`
 
 ## 5. Recommended order
 
 1. Deploy backend to Render first.
 2. Copy the Render backend URL.
-3. Add that URL into Netlify env vars.
-4. Deploy frontend to Netlify.
-5. Copy the Netlify frontend URL back into Render `APP_CORS_ALLOWED_ORIGINS`.
+3. Add that URL into Vercel env vars.
+4. Deploy frontend to Vercel.
+5. Copy the Vercel frontend URL back into Render `APP_CORS_ALLOWED_ORIGINS`.
 6. Redeploy backend on Render.
 
 ## 6. Final checks
