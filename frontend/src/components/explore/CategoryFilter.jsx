@@ -24,6 +24,30 @@ const CATEGORY_OPTIONS = [
     slug: "foodie",
     inactiveClass: "bg-[#FDF2E9] text-[#9C4F2B] border-[#F2DCCB]",
     activeClass: "bg-[#F2DCCB] text-[#9C4F2B] border-[#9C4F2B]"
+  },
+  {
+    label: "Thủ công",
+    slug: "craft",
+    inactiveClass: "bg-[#F6F0E7] text-[#7B5A2E] border-[#E7DCC8]",
+    activeClass: "bg-[#EBDDCC] text-[#7B5A2E] border-[#7B5A2E]"
+  },
+  {
+    label: "Nông nghiệp",
+    slug: "agriculture",
+    inactiveClass: "bg-[#F1F7E3] text-[#557A1F] border-[#D7E8B8]",
+    activeClass: "bg-[#E3EECC] text-[#557A1F] border-[#557A1F]"
+  },
+  {
+    label: "Thiên nhiên",
+    slug: "nature",
+    inactiveClass: "bg-[#EAF7F4] text-[#1E6B60] border-[#CFE7E2]",
+    activeClass: "bg-[#D7EEE8] text-[#1E6B60] border-[#1E6B60]"
+  },
+  {
+    label: "Cộng đồng",
+    slug: "community",
+    inactiveClass: "bg-[#F7F0EA] text-[#7A5230] border-[#E5D6C8]",
+    activeClass: "bg-[#EADBCB] text-[#7A5230] border-[#7A5230]"
   }
 ];
 

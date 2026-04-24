@@ -15,14 +15,18 @@ import {
   MapPinned,
   Mountain,
   MoonStar,
+  Sprout,
   Star,
+  Hammer,
   ShieldCheck,
   Sparkles,
   Sunrise,
   TentTree,
   TimerReset,
+  Trees,
   UtensilsCrossed,
   UserRound,
+  Users,
   Utensils,
   Wind,
 } from "lucide-react";
@@ -46,6 +50,22 @@ const CATEGORY_STYLES = {
   foodie: {
     icon: Utensils,
     className: "border-[#F2DCCB] bg-[#FDF2E9] text-[#9C4F2B]",
+  },
+  craft: {
+    icon: Hammer,
+    className: "border-[#E7DCC8] bg-[#F6F0E7] text-[#7B5A2E]",
+  },
+  agriculture: {
+    icon: Sprout,
+    className: "border-[#D7E8B8] bg-[#F1F7E3] text-[#557A1F]",
+  },
+  nature: {
+    icon: Trees,
+    className: "border-[#CFE7E2] bg-[#EAF7F4] text-[#1E6B60]",
+  },
+  community: {
+    icon: Users,
+    className: "border-[#E5D6C8] bg-[#F7F0EA] text-[#7A5230]",
   },
 };
 
