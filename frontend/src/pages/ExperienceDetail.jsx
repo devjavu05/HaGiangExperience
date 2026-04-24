@@ -24,7 +24,7 @@ import {
   UtensilsCrossed,
   UserRound,
   Utensils,
-  Wind
+  Wind,
 } from "lucide-react";
 import ImageGallery from "../components/experience/ImageGallery";
 import ReviewForm from "../components/experience/ReviewForm";
@@ -33,20 +33,20 @@ import { submitReply } from "../services/experienceService";
 const CATEGORY_STYLES = {
   culture: {
     icon: Leaf,
-    className: "border-[#CFE3D7] bg-[#E8F3EE] text-[#1A3021]"
+    className: "border-[#CFE3D7] bg-[#E8F3EE] text-[#1A3021]",
   },
   adventure: {
     icon: Mountain,
-    className: "border-[#D6E9FB] bg-[#EBF5FF] text-[#1D4E89]"
+    className: "border-[#D6E9FB] bg-[#EBF5FF] text-[#1D4E89]",
   },
   healing: {
     icon: Wind,
-    className: "border-[#E5D5FA] bg-[#F3E8FF] text-[#6B3FA0]"
+    className: "border-[#E5D5FA] bg-[#F3E8FF] text-[#6B3FA0]",
   },
   foodie: {
     icon: Utensils,
-    className: "border-[#F2DCCB] bg-[#FDF2E9] text-[#9C4F2B]"
-  }
+    className: "border-[#F2DCCB] bg-[#FDF2E9] text-[#9C4F2B]",
+  },
 };
 
 function ExperienceDetail({
@@ -54,7 +54,7 @@ function ExperienceDetail({
   currentUser,
   onReviewSubmitted,
   onReplySubmitted,
-  onContact
+  onContact,
 }) {
   const galleryImages = experience.imageUrls?.length
     ? experience.imageUrls
@@ -123,7 +123,8 @@ function ExperienceDetail({
                           key={index}
                           size={18}
                           fill={
-                            index < Math.round(Number(experience.averageRating ?? 0))
+                            index <
+                            Math.round(Number(experience.averageRating ?? 0))
                               ? "currentColor"
                               : "transparent"
                           }
@@ -132,7 +133,8 @@ function ExperienceDetail({
                       ))}
                     </div>
                     <p className="text-sm font-semibold text-slate-700">
-                      {Number(experience.averageRating ?? 0).toFixed(1)} ({experience.totalReviews ?? 0} đánh giá)
+                      {Number(experience.averageRating ?? 0).toFixed(1)} (
+                      {experience.totalReviews ?? 0} đánh giá)
                     </p>
                   </div>
                   {categories.length ? (
@@ -202,11 +204,19 @@ function ExperienceDetail({
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#CFE3D7] text-[#1A3021]">
                       <Leaf size={22} />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900">Hoạt động</h2>
+                    <h2 className="text-2xl font-bold text-slate-900">
+                      Hoạt động
+                    </h2>
                     <ul className="mt-6 space-y-3.5">
                       {experience.activities.map((item) => (
-                        <li key={item} className="flex items-start gap-3 text-sm leading-7 text-slate-600">
-                          <BadgeCheck className="mt-1 shrink-0 text-[#2F5D46]" size={18} />
+                        <li
+                          key={item}
+                          className="flex items-start gap-3 text-sm leading-7 text-slate-600"
+                        >
+                          <BadgeCheck
+                            className="mt-1 shrink-0 text-[#2F5D46]"
+                            size={18}
+                          />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -224,11 +234,19 @@ function ExperienceDetail({
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2DCCB] text-[#9C4F2B]">
                       <Sparkles size={22} />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900">Điểm nhấn</h2>
+                    <h2 className="text-2xl font-bold text-slate-900">
+                      Điểm nhấn
+                    </h2>
                     <ul className="mt-6 space-y-3.5">
                       {experience.highlights.map((item) => (
-                        <li key={item} className="flex items-start gap-3 text-sm leading-7 text-slate-600">
-                          <Sparkles className="mt-1 shrink-0 text-[#9C4F2B]" size={16} />
+                        <li
+                          key={item}
+                          className="flex items-start gap-3 text-sm leading-7 text-slate-600"
+                        >
+                          <Sparkles
+                            className="mt-1 shrink-0 text-[#9C4F2B]"
+                            size={16}
+                          />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -236,7 +254,9 @@ function ExperienceDetail({
                   </motion.section>
                 </div>
 
-                {itinerary.length ? <EnhancedItineraryTimeline itinerary={itinerary} /> : null}
+                {itinerary.length ? (
+                  <EnhancedItineraryTimeline itinerary={itinerary} />
+                ) : null}
 
                 {hasLocation ? (
                   <section className="mb-12 space-y-5 rounded-[30px] border border-slate-100 bg-white px-6 py-10 shadow-sm sm:px-8 sm:py-10">
@@ -245,7 +265,10 @@ function ExperienceDetail({
                         Vị trí trải nghiệm
                       </p>
                       <div className="inline-flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-600">
-                        <MapPinned size={18} className="mt-1 shrink-0 text-[#486152]" />
+                        <MapPinned
+                          size={18}
+                          className="mt-1 shrink-0 text-[#486152]"
+                        />
                         <span>{locationText}</span>
                       </div>
                     </div>
@@ -303,7 +326,9 @@ function ExperienceDetail({
                     </div>
 
                     <div className="mt-4 rounded-[24px] bg-[#E8F3EE] px-4 py-4">
-                      <p className="text-sm font-medium text-slate-500">Giá trải nghiệm</p>
+                      <p className="text-sm font-medium text-slate-500">
+                        Giá trải nghiệm
+                      </p>
                       <p className="mt-2 text-3xl font-bold tracking-tight text-[#1A3021]">
                         {experience.price}
                       </p>
@@ -320,7 +345,9 @@ function ExperienceDetail({
                   <div className="grid gap-4 rounded-[24px] border border-slate-100 bg-slate-50 p-4">
                     <div className="flex items-center justify-between gap-3 text-sm">
                       <span className="text-slate-500">Thời lượng</span>
-                      <span className="font-semibold text-slate-900">{experience.duration}</span>
+                      <span className="font-semibold text-slate-900">
+                        {experience.duration}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between gap-3 text-sm">
                       <span className="text-slate-500">Địa điểm</span>
@@ -336,19 +363,32 @@ function ExperienceDetail({
                     </p>
                     <ul className="mt-3 space-y-2.5 text-sm leading-6 text-slate-700">
                       <li className="flex items-start gap-2.5">
-                        <BadgeCheck size={16} className="mt-1 shrink-0 text-forest-700" />
-                        <span>Dễ chọn ngày đẹp và khung giờ phù hợp hơn cho hành trình.</span>
+                        <BadgeCheck
+                          size={16}
+                          className="mt-1 shrink-0 text-forest-700"
+                        />
+                        <span>
+                          Dễ chọn ngày đẹp và khung giờ phù hợp hơn cho hành
+                          trình.
+                        </span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <BadgeCheck size={16} className="mt-1 shrink-0 text-forest-700" />
-                        <span>Host phản hồi nhanh, thuận tiện cho cả khách lẻ lẫn nhóm nhỏ.</span>
+                        <BadgeCheck
+                          size={16}
+                          className="mt-1 shrink-0 text-forest-700"
+                        />
+                        <span>
+                          Host phản hồi nhanh, thuận tiện cho cả khách lẻ lẫn
+                          nhóm nhỏ.
+                        </span>
                       </li>
                     </ul>
                   </div>
 
                   <p className="text-sm leading-7 text-slate-600">
-                    Neu trai nghiem nay dung voi cam hung cua ban, hay lien he truc tiep voi host
-                    qua Zalo de hoi lich trinh, ngay di va cach sap xep phu hop nhat cho chuyen di.
+                    Nếu cảm thấy hào hứng với trải nghiệm này, hãy liên hệ với
+                    chúng tôi ngay để biết thêm thông tin chi tiết, khuyến mại
+                    và đặt dịch vụ.
                   </p>
 
                   <motion.button
@@ -358,12 +398,12 @@ function ExperienceDetail({
                     onClick={onContact}
                     className="flex w-full items-center justify-center gap-3 rounded-full bg-[#1A3021] px-5 py-4 text-base font-semibold text-white shadow-md transition-all hover:bg-[#1A3021]/90 hover:shadow-lg hover:shadow-emerald-900/10"
                   >
-                    Lien he ngay
+                    Liên hệ ngay
                     <ArrowRight size={18} />
                   </motion.button>
 
                   <p className="text-center text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
-                    Tu van nhanh • Nhan tin Zalo • Trao doi truc tiep
+                    Tư vấn nhanh • Nhắn tin Zalo • Trao đổi trực tiếp
                   </p>
                 </div>
               </div>
@@ -382,7 +422,9 @@ function ItineraryTimeline({ itinerary }) {
         <p className="text-xs font-semibold uppercase tracking-[0.34em] text-slate-500">
           Lịch trình chi tiết
         </p>
-        <h2 className="text-3xl font-bold text-[#1A3021]">Theo nhịp hành trình trong ngày</h2>
+        <h2 className="text-3xl font-bold text-[#1A3021]">
+          Theo nhịp hành trình trong ngày
+        </h2>
       </div>
 
       <div className="relative mt-8">
@@ -409,8 +451,12 @@ function ItineraryTimeline({ itinerary }) {
               </div>
 
               <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
-                <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-7 text-slate-600">{item.description}</p>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  {item.description}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -423,14 +469,17 @@ function ItineraryTimeline({ itinerary }) {
 function EnhancedItineraryTimeline({ itinerary }) {
   const sections = useMemo(() => groupItineraryByDay(itinerary), [itinerary]);
   const [activeDay, setActiveDay] = useState(() => sections[0]?.dayNumber ?? 1);
-  const activeSection = sections.find((section) => section.dayNumber === activeDay) ?? sections[0];
+  const activeSection =
+    sections.find((section) => section.dayNumber === activeDay) ?? sections[0];
 
   useEffect(() => {
     if (!sections.length) {
       return;
     }
 
-    const hasActiveDay = sections.some((section) => section.dayNumber === activeDay);
+    const hasActiveDay = sections.some(
+      (section) => section.dayNumber === activeDay,
+    );
     if (!hasActiveDay) {
       setActiveDay(sections[0].dayNumber);
     }
@@ -442,7 +491,9 @@ function EnhancedItineraryTimeline({ itinerary }) {
         <p className="text-xs font-semibold uppercase tracking-[0.34em] text-slate-500">
           Lịch trình chi tiết
         </p>
-        <h2 className="text-3xl font-bold text-[#1A3021]">Theo nhịp hành trình trong ngày</h2>
+        <h2 className="text-3xl font-bold text-[#1A3021]">
+          Theo nhịp hành trình trong ngày
+        </h2>
       </div>
 
       {sections.length > 1 ? (
@@ -499,7 +550,9 @@ function EnhancedItineraryTimeline({ itinerary }) {
               <div className="relative rounded-[28px] bg-[#F9F6F2]/65 px-4 py-5 sm:px-5">
                 <div
                   className="absolute left-1/2 top-5 hidden w-[160px] -translate-x-1/2 md:block"
-                  style={{ height: `${getZigzagHeight(activeSection?.items.length ?? 0)}px` }}
+                  style={{
+                    height: `${getZigzagHeight(activeSection?.items.length ?? 0)}px`,
+                  }}
                 >
                   <svg
                     viewBox={`0 0 160 ${getZigzagHeight(activeSection?.items.length ?? 0)}`}
@@ -532,9 +585,22 @@ function EnhancedItineraryTimeline({ itinerary }) {
                       fill="url(#timeline-end-node)"
                     />
                     <defs>
-                      <radialGradient id="timeline-end-node" cx="50%" cy="50%" r="65%">
-                        <stop offset="0%" stopColor="#9BC4AE" stopOpacity="0.95" />
-                        <stop offset="100%" stopColor="#9BC4AE" stopOpacity="0.18" />
+                      <radialGradient
+                        id="timeline-end-node"
+                        cx="50%"
+                        cy="50%"
+                        r="65%"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#9BC4AE"
+                          stopOpacity="0.95"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#9BC4AE"
+                          stopOpacity="0.18"
+                        />
                       </radialGradient>
                     </defs>
                   </svg>
@@ -546,10 +612,21 @@ function EnhancedItineraryTimeline({ itinerary }) {
                       {activeSection.items.map((item, index) => (
                         <motion.div
                           layout
-                          key={item.id ?? `${item.timeTag}-${item.title}-${activeSection.dayNumber}-${index}`}
-                          initial={{ opacity: 0, x: index % 2 === 0 ? -24 : 24, y: 20 }}
+                          key={
+                            item.id ??
+                            `${item.timeTag}-${item.title}-${activeSection.dayNumber}-${index}`
+                          }
+                          initial={{
+                            opacity: 0,
+                            x: index % 2 === 0 ? -24 : 24,
+                            y: 20,
+                          }}
                           animate={{ opacity: 1, x: 0, y: 0 }}
-                          exit={{ opacity: 0, x: index % 2 === 0 ? 24 : -24, y: -10 }}
+                          exit={{
+                            opacity: 0,
+                            x: index % 2 === 0 ? 24 : -24,
+                            y: -10,
+                          }}
                           transition={{ duration: 0.35, delay: index * 0.05 }}
                           className="relative grid gap-4 pl-12 md:grid-cols-[1fr_96px_1fr] md:items-start md:gap-6 md:pl-0"
                         >
@@ -562,7 +639,9 @@ function EnhancedItineraryTimeline({ itinerary }) {
 
                           <div
                             className={`pt-1 md:pt-3 ${
-                              index % 2 === 0 ? "md:col-start-1 md:text-right" : "md:col-start-3 md:text-left"
+                              index % 2 === 0
+                                ? "md:col-start-1 md:text-right"
+                                : "md:col-start-3 md:text-left"
                             }`}
                           >
                             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2F5D46]">
@@ -572,10 +651,14 @@ function EnhancedItineraryTimeline({ itinerary }) {
 
                           <div
                             className={`rounded-3xl border border-slate-100 bg-white p-5 shadow-sm ${
-                              index % 2 === 0 ? "md:col-start-1 md:mr-8" : "md:col-start-3 md:ml-8"
+                              index % 2 === 0
+                                ? "md:col-start-1 md:mr-8"
+                                : "md:col-start-3 md:ml-8"
                             }`}
                           >
-                            <h3 className="text-xl font-bold text-slate-900">{item.title}</h3>
+                            <h3 className="text-xl font-bold text-slate-900">
+                              {item.title}
+                            </h3>
                             <ExpandableDescription text={item.description} />
                           </div>
                         </motion.div>
@@ -628,17 +711,25 @@ function groupItineraryByDay(itinerary) {
 
   itinerary.forEach((item) => {
     const resolvedDayNumber =
-      item.dayNumber && Number(item.dayNumber) > 0 ? Number(item.dayNumber) : sections.length + 1;
+      item.dayNumber && Number(item.dayNumber) > 0
+        ? Number(item.dayNumber)
+        : sections.length + 1;
     const dayLabel = extractDayLabel(item);
 
     if (!currentSection || currentSection.dayNumber !== resolvedDayNumber) {
-      currentSection = { dayNumber: resolvedDayNumber, label: dayLabel, items: [] };
+      currentSection = {
+        dayNumber: resolvedDayNumber,
+        label: dayLabel,
+        items: [],
+      };
       sections.push(currentSection);
     }
 
     currentSection.items.push(item);
   });
-  return sections.length ? sections : [{ dayNumber: 1, label: "Lịch trình", items: itinerary }];
+  return sections.length
+    ? sections
+    : [{ dayNumber: 1, label: "Lịch trình", items: itinerary }];
 }
 
 function ReviewsSection({
@@ -649,33 +740,42 @@ function ReviewsSection({
   experienceId,
   authorId,
   onReviewSubmitted,
-  onReplySubmitted
+  onReplySubmitted,
 }) {
   const [visibleCount, setVisibleCount] = useState(5);
-  const isExperienceOwner = Boolean(currentUser?.id && authorId && currentUser.id === authorId);
+  const isExperienceOwner = Boolean(
+    currentUser?.id && authorId && currentUser.id === authorId,
+  );
   const prioritizedReviews = useMemo(() => {
     if (!currentUser?.id) {
       return reviews;
     }
 
-    const myReviews = reviews.filter((review) => review.userId === currentUser.id);
-    const otherReviews = reviews.filter((review) => review.userId !== currentUser.id);
+    const myReviews = reviews.filter(
+      (review) => review.userId === currentUser.id,
+    );
+    const otherReviews = reviews.filter(
+      (review) => review.userId !== currentUser.id,
+    );
 
     return [...myReviews, ...otherReviews];
   }, [reviews, currentUser?.id]);
   const myReview = currentUser?.id
-    ? prioritizedReviews.find((review) => review.userId === currentUser.id) ?? null
+    ? (prioritizedReviews.find((review) => review.userId === currentUser.id) ??
+      null)
     : null;
   const visibleReviews = prioritizedReviews.slice(0, visibleCount);
   const distribution = useMemo(() => {
     const total = Math.max(totalReviews || reviews.length, 0);
 
     return [5, 4, 3, 2, 1].map((star) => {
-      const count = reviews.filter((review) => Number(review.rating) === star).length;
+      const count = reviews.filter(
+        (review) => Number(review.rating) === star,
+      ).length;
       return {
         star,
         count,
-        percentage: total > 0 ? (count / total) * 100 : 0
+        percentage: total > 0 ? (count / total) * 100 : 0,
       };
     });
   }, [reviews, totalReviews]);
@@ -686,7 +786,9 @@ function ReviewsSection({
         <p className="text-xs font-semibold uppercase tracking-[0.34em] text-slate-500">
           Đánh giá trải nghiệm
         </p>
-        <h2 className="text-3xl font-bold text-[#1A3021]">Cảm nhận từ người đã trải nghiệm</h2>
+        <h2 className="text-3xl font-bold text-[#1A3021]">
+          Cảm nhận từ người đã trải nghiệm
+        </h2>
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
@@ -699,7 +801,12 @@ function ReviewsSection({
           </div>
           <div className="mt-3 flex items-center gap-1 text-yellow-400">
             {Array.from({ length: 5 }, (_, index) => (
-              <Star key={index} size={18} fill="currentColor" strokeWidth={1.6} />
+              <Star
+                key={index}
+                size={18}
+                fill="currentColor"
+                strokeWidth={1.6}
+              />
             ))}
           </div>
           <p className="mt-3 text-sm leading-7 text-slate-600">
@@ -710,8 +817,13 @@ function ReviewsSection({
 
           <div className="mt-6 space-y-3">
             {distribution.map((item) => (
-              <div key={item.star} className="grid grid-cols-[44px_1fr_48px] items-center gap-3 text-sm">
-                <span className="font-semibold text-slate-700">{item.star} sao</span>
+              <div
+                key={item.star}
+                className="grid grid-cols-[44px_1fr_48px] items-center gap-3 text-sm"
+              >
+                <span className="font-semibold text-slate-700">
+                  {item.star} sao
+                </span>
                 <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
                   <div
                     className="h-full rounded-full bg-yellow-400 transition-all"
@@ -733,17 +845,22 @@ function ReviewsSection({
             />
           ) : !currentUser ? (
             <div className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-6 py-5 text-sm leading-7 text-slate-500">
-              Đăng nhập để gửi đánh giá và chia sẻ cảm nhận của bạn về trải nghiệm này.
+              Đăng nhập để gửi đánh giá và chia sẻ cảm nhận của bạn về trải
+              nghiệm này.
             </div>
           ) : (
             <div className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-6 py-5 text-sm leading-7 text-slate-500">
-              Chủ bài đăng không thể tự gửi đánh giá cho trải nghiệm của chính mình.
+              Chủ bài đăng không thể tự gửi đánh giá cho trải nghiệm của chính
+              mình.
             </div>
           )}
 
           {visibleReviews.length ? (
             visibleReviews.map((review) => (
-              <div key={review.id ?? `${review.userId}-${review.createdAt}`} className="space-y-3">
+              <div
+                key={review.id ?? `${review.userId}-${review.createdAt}`}
+                className="space-y-3"
+              >
                 <article className="rounded-[24px] border border-slate-100 bg-white p-5 shadow-sm">
                   <div className="flex items-start gap-4">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#E8F3EE] text-sm font-bold text-[#1A3021]">
@@ -762,7 +879,9 @@ function ReviewsSection({
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <p className="font-semibold text-slate-900">{review.username}</p>
+                            <p className="font-semibold text-slate-900">
+                              {review.username}
+                            </p>
                             {currentUser?.id === review.userId ? (
                               <span className="rounded-full bg-[#EAF5EE] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2F5D46]">
                                 Đánh giá của bạn
@@ -774,7 +893,11 @@ function ReviewsSection({
                               <Star
                                 key={index}
                                 size={15}
-                                fill={index < Number(review.rating ?? 0) ? "currentColor" : "transparent"}
+                                fill={
+                                  index < Number(review.rating ?? 0)
+                                    ? "currentColor"
+                                    : "transparent"
+                                }
                                 strokeWidth={1.8}
                               />
                             ))}
@@ -784,7 +907,9 @@ function ReviewsSection({
                           {formatReviewDate(review.createdAt)}
                         </p>
                       </div>
-                      <p className="mt-3 text-sm leading-7 text-slate-600">{review.comment}</p>
+                      <p className="mt-3 text-sm leading-7 text-slate-600">
+                        {review.comment}
+                      </p>
 
                       {isExperienceOwner && !review.reply ? (
                         <div className="mt-4">
@@ -802,7 +927,9 @@ function ReviewsSection({
                 {review.reply ? (
                   <div className="ml-8 rounded-[22px] border border-[#CFE3D7] bg-[#E8F3EE] px-5 py-4 shadow-sm">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-sm font-semibold text-[#1A3021]">Phản hồi từ Host</p>
+                      <p className="text-sm font-semibold text-[#1A3021]">
+                        Phản hồi từ Host
+                      </p>
                       <p className="text-xs uppercase tracking-[0.2em] text-[#5f7a64]">
                         {formatReviewDate(review.reply.createdAt)}
                       </p>
@@ -810,14 +937,17 @@ function ReviewsSection({
                     <p className="mt-2 text-sm font-medium text-[#2F5D46]">
                       {review.reply.hostName || "Host"}
                     </p>
-                    <p className="mt-2 text-sm leading-7 text-slate-700">{review.reply.comment}</p>
+                    <p className="mt-2 text-sm leading-7 text-slate-700">
+                      {review.reply.comment}
+                    </p>
                   </div>
                 ) : null}
               </div>
             ))
           ) : (
             <div className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">
-              Chưa có bình luận nào. Hãy là người đầu tiên để lại cảm nhận cho trải nghiệm này.
+              Chưa có bình luận nào. Hãy là người đầu tiên để lại cảm nhận cho
+              trải nghiệm này.
             </div>
           )}
 
@@ -855,13 +985,16 @@ function HostReplyComposer({ experienceId, reviewId, onSubmitted }) {
       setIsSubmitting(true);
       setError("");
       const updatedReview = await submitReply(experienceId, reviewId, {
-        comment: comment.trim()
+        comment: comment.trim(),
       });
       setComment("");
       setIsOpen(false);
       onSubmitted?.(updatedReview);
     } catch (submitError) {
-      setError(submitError.response?.data?.message || "Không thể gửi phản hồi lúc này.");
+      setError(
+        submitError.response?.data?.message ||
+          "Không thể gửi phản hồi lúc này.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -880,7 +1013,10 @@ function HostReplyComposer({ experienceId, reviewId, onSubmitted }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-[20px] border border-[#CFE3D7] bg-[#F8FCF9] p-4">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-[20px] border border-[#CFE3D7] bg-[#F8FCF9] p-4"
+    >
       <p className="text-sm font-semibold text-[#1A3021]">Phản hồi tới khách</p>
       <textarea
         value={comment}
@@ -892,7 +1028,9 @@ function HostReplyComposer({ experienceId, reviewId, onSubmitted }) {
         placeholder="Viết phản hồi từ Host..."
         className="mt-3 w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#6E9C83]"
       />
-      {error ? <p className="mt-2 text-sm font-medium text-red-600">{error}</p> : null}
+      {error ? (
+        <p className="mt-2 text-sm font-medium text-red-600">{error}</p>
+      ) : null}
       <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
@@ -910,7 +1048,9 @@ function HostReplyComposer({ experienceId, reviewId, onSubmitted }) {
           disabled={isSubmitting}
           className="inline-flex items-center gap-2 rounded-full bg-[#1A3021] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isSubmitting ? <LoaderCircle size={15} className="animate-spin" /> : null}
+          {isSubmitting ? (
+            <LoaderCircle size={15} className="animate-spin" />
+          ) : null}
           {isSubmitting ? "Đang gửi..." : "Gửi phản hồi"}
         </button>
       </div>
@@ -940,7 +1080,7 @@ function formatReviewDate(dateString) {
   return new Intl.DateTimeFormat("vi-VN", {
     day: "2-digit",
     month: "2-digit",
-    year: "numeric"
+    year: "numeric",
   }).format(new Date(dateString));
 }
 
@@ -949,7 +1089,9 @@ function extractDayLabel(item) {
     return `Ngày ${Number(item.dayNumber)}`;
   }
 
-  const candidates = [item.timeTag, item.title, item.description].filter(Boolean);
+  const candidates = [item.timeTag, item.title, item.description].filter(
+    Boolean,
+  );
 
   for (const candidate of candidates) {
     const match = candidate.match(/ngày\s*\d+/i);
@@ -993,7 +1135,8 @@ function getZigzagHeight(itemCount) {
 }
 
 function renderItineraryIcon(item) {
-  const content = `${item.timeTag ?? ""} ${item.title ?? ""} ${item.description ?? ""}`.toLowerCase();
+  const content =
+    `${item.timeTag ?? ""} ${item.title ?? ""} ${item.description ?? ""}`.toLowerCase();
   const iconClass = "h-4 w-4 text-[#2F5D46] md:h-5 md:w-5";
 
   if (/ăn|bữa|sáng|trưa|tối|ẩm thực|phở|cháo|cơm/.test(content)) {
