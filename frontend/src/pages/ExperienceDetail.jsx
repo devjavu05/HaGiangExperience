@@ -1129,7 +1129,7 @@ function buildZigzagPath(itemCount) {
   const centerX = 80;
   const amplitude = 34;
   const startY = 24;
-  const tailLength = 42;
+  const tailLength = 18;
   const anchorY = getZigzagAnchorY(itemCount);
   const endY = getZigzagEndY(itemCount);
   let path = `M ${centerX} ${startY}`;
@@ -1159,7 +1159,7 @@ function getZigzagAnchorY(itemCount) {
 }
 
 function getZigzagEndY(itemCount) {
-  const tailLength = 42;
+  const tailLength = 18;
   return getZigzagAnchorY(itemCount) + (itemCount > 0 ? tailLength : 0);
 }
 
