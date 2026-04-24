@@ -4,6 +4,7 @@ import com.hagiang.localexperience.auth.dto.AuthResponse;
 import com.hagiang.localexperience.auth.dto.LoginRequest;
 import com.hagiang.localexperience.auth.dto.RegisterRequest;
 import com.hagiang.localexperience.auth.dto.RegisterResponse;
+import com.hagiang.localexperience.auth.dto.UpdatePhoneNumberRequest;
 import com.hagiang.localexperience.auth.entity.Role;
 import com.hagiang.localexperience.auth.entity.User;
 import com.hagiang.localexperience.auth.repository.UserRepository;
@@ -62,6 +63,33 @@ public class AuthService {
         }
 
         return new AuthResponse(user.getId(), user.getUsername(), user.getPhoneNumber(), user.getRole().name());
+    }
+
+    public AuthResponse updatePhoneNumber(Long userId, UpdatePhoneNumberRequest request) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User id is required");
+        }
+        if (request == null) {
+            throw new IllegalArgumentException("Phone number is required");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        String normalizedPhoneNumber = normalizePhoneNumber(request.getPhoneNumber());
+
+        if (!normalizedPhoneNumber.equals(user.getPhoneNumber())
+                && userRepository.existsByPhoneNumber(normalizedPhoneNumber)) {
+            throw new IllegalArgumentException("Phone number already exists");
+        }
+
+        user.setPhoneNumber(normalizedPhoneNumber);
+        User savedUser = userRepository.save(user);
+        return new AuthResponse(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getPhoneNumber(),
+                savedUser.getRole().name()
+        );
     }
 
     private void validateRegisterRequest(RegisterRequest request) {

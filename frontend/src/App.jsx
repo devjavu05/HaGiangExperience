@@ -13,6 +13,7 @@ import CreatePost from "./pages/CreatePost";
 import AuthPage from "./pages/AuthPage";
 import MyExperiences from "./pages/MyExperiences";
 import EditExperiencePage from "./pages/EditExperiencePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function getCurrentView(pathname) {
   if (pathname.startsWith("/explore")) return "home";
@@ -164,32 +165,7 @@ function AppContent() {
           />
           <Route
             path="/profile"
-            element={
-              <div className="mx-auto min-h-[60vh] max-w-4xl px-4 pb-16 pt-36 sm:px-6 lg:px-8">
-                <div className="rounded-[2rem] border border-clay-200 bg-white/95 p-8 shadow-xl shadow-stone-950/5">
-                  <p className="text-sm font-semibold uppercase tracking-[0.28em] text-forest-700">
-                    Trang cá nhân
-                  </p>
-                  <h2 className="mt-3 text-3xl font-semibold text-stone-900">
-                    Quản lý hồ sơ của bạn
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-base leading-7 text-stone-600">
-                    Khu vực này sẽ là nơi cập nhật thông tin cá nhân, ảnh đại diện và các cài đặt
-                    dành riêng cho người dùng của nền tảng Hà Giang Local Experience.
-                  </p>
-                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-3xl bg-clay-50 p-5">
-                      <p className="text-xs uppercase tracking-[0.24em] text-stone-500">Tên hiển thị</p>
-                      <p className="mt-2 text-lg font-semibold text-stone-900">{user?.username || "Chưa đăng nhập"}</p>
-                    </div>
-                    <div className="rounded-3xl bg-clay-50 p-5">
-                      <p className="text-xs uppercase tracking-[0.24em] text-stone-500">Vai trò</p>
-                      <p className="mt-2 text-lg font-semibold text-stone-900">{user?.role || "USER"}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
+            element={<ProfilePage showToast={showToast} />}
           />
         </Route>
       </Routes>

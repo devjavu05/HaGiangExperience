@@ -31,6 +31,19 @@ export function AuthProvider({ children }) {
     login(authPayload) {
       setAuth(authPayload);
     },
+    updateUser(nextUser) {
+      setAuth((current) =>
+        current
+          ? {
+              ...current,
+              user: {
+                ...current.user,
+                ...nextUser
+              }
+            }
+          : current
+      );
+    },
     logout() {
       setAuth(null);
     }
