@@ -52,14 +52,14 @@ function ProfilePage({ showToast }) {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className="rounded-3xl bg-clay-50 p-5">
-            <p className="text-xs uppercase tracking-[0.24em] text-stone-500">Ten hien thi</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-stone-500">Tên hiển thị</p>
             <div className="mt-2 flex items-center gap-3 text-lg font-semibold text-stone-900">
               <UserRound size={18} className="text-terracotta-700" />
               <span>{user?.username || "Chua dang nhap"}</span>
             </div>
           </div>
           <div className="rounded-3xl bg-clay-50 p-5">
-            <p className="text-xs uppercase tracking-[0.24em] text-stone-500">Vai tro</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-stone-500">Vai trò</p>
             <p className="mt-2 text-lg font-semibold text-stone-900">{user?.role || "USER"}</p>
           </div>
         </div>
@@ -89,7 +89,7 @@ function ProfilePage({ showToast }) {
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#1A3021] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-950/10 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmitting ? <LoaderCircle size={16} className="animate-spin" /> : <Save size={16} />}
-            {isSubmitting ? "Dang cap nhat..." : "Luu so dien thoai"}
+            {isSubmitting ? "Đang cập nhật..." : "Lưu số điện thoại"}
           </button>
         </form>
       </div>
