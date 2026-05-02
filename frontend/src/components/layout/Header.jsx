@@ -76,6 +76,12 @@ function Header({
     ? "text-white hover:bg-white/10"
     : "text-slate-700 hover:bg-slate-100";
 
+  function handleTranslateToEnglish() {
+    const currentUrl = window.location.href;
+    const translateUrl = `https://translate.google.com/translate?sl=vi&tl=en&u=${encodeURIComponent(currentUrl)}`;
+    window.open(translateUrl, "_blank", "noopener,noreferrer");
+  }
+
   return (
     <header
       className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${headerClass}`}
@@ -113,6 +119,13 @@ function Header({
           </nav>
 
           <div className="flex flex-wrap items-center gap-4 lg:justify-end xl:gap-5">
+            <button
+              type="button"
+              onClick={handleTranslateToEnglish}
+              className={`rounded-full border px-4 py-2 text-sm font-medium transition-all duration-500 ${secondaryButtonClass}`}
+            >
+              Translate EN
+            </button>
             {isAuthenticated ? (
               <div className="relative ml-auto" ref={menuRef}>
                 <button
