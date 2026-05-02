@@ -240,7 +240,7 @@ function Header({
                   onClick={() => setIsTranslateGuideOpen(false)}
                   className="rounded-full bg-forest-900 px-5 py-3 text-sm font-semibold text-clay-50"
                 >
-                  Da hieu
+                  Done
                 </button>
               </div>
             </motion.div>
