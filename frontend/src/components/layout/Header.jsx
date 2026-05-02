@@ -18,8 +18,8 @@ function Header({
 }) {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
-  const isExperiencePage = location.pathname.startsWith("/experience/");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isTranslateGuideOpen, setIsTranslateGuideOpen] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -77,16 +77,15 @@ function Header({
     : "text-slate-700 hover:bg-slate-100";
 
   function handleTranslateToEnglish() {
-    const currentUrl = window.location.href;
-    const translateUrl = `https://translate.google.com/translate?sl=vi&tl=en&u=${encodeURIComponent(currentUrl)}`;
-    window.open(translateUrl, "_blank", "noopener,noreferrer");
+    setIsTranslateGuideOpen(true);
   }
 
   return (
-    <header
-      className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${headerClass}`}
-    >
-      <div className="flex w-full flex-col gap-4 px-6 py-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12 xl:px-14 2xl:px-16">
+    <>
+      <header
+        className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${headerClass}`}
+      >
+        <div className="flex w-full flex-col gap-4 px-6 py-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12 xl:px-14 2xl:px-16">
         <button type="button" onClick={onNavigateHome} className="shrink-0 text-left">
           <p
             className={`text-[11px] font-semibold uppercase tracking-[0.38em] transition-all duration-500 ${subTextClass}`}
@@ -205,8 +204,50 @@ function Header({
             ) : null}
           </div>
         </div>
-      </div>
-    </header>
+        </div>
+      </header>
+
+      <AnimatePresence>
+        {isTranslateGuideOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 px-4"
+            onClick={() => setIsTranslateGuideOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 18, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.96 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="w-full max-w-lg rounded-[28px] border border-clay-200 bg-white p-6 shadow-[0_30px_80px_rgba(39,31,24,0.22)]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="text-2xl font-semibold text-stone-900">Translate to English</h3>
+              <p className="mt-3 text-sm leading-7 text-stone-600">
+                De an toan voi form dang nhap, dang bai va nhap lieu, hay dung tinh nang
+                dich co san cua Chrome thay vi dich truc tiep ben trong ung dung.
+              </p>
+              <div className="mt-5 rounded-[24px] bg-stone-50 p-4 text-sm leading-7 text-stone-700">
+                <p>1. Nhan chuot phai tren trang hien tai.</p>
+                <p>2. Chon `Translate to English`.</p>
+                <p>3. Neu thanh dich cua Chrome hien ra, chon `English`.</p>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsTranslateGuideOpen(false)}
+                  className="rounded-full bg-forest-900 px-5 py-3 text-sm font-semibold text-clay-50"
+                >
+                  Da hieu
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 }
 
