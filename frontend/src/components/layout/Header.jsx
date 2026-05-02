@@ -226,13 +226,13 @@ function Header({
             >
               <h3 className="text-2xl font-semibold text-stone-900">Translate to English</h3>
               <p className="mt-3 text-sm leading-7 text-stone-600">
-                De an toan voi form dang nhap, dang bai va nhap lieu, hay dung tinh nang
-                dich co san cua Chrome thay vi dich truc tiep ben trong ung dung.
+                For security when using login forms, posting content, or entering data, 
+                please use Chrome's built-in translation feature instead of translating directly within the application.
               </p>
               <div className="mt-5 rounded-[24px] bg-stone-50 p-4 text-sm leading-7 text-stone-700">
-                <p>1. Nhan chuot phai tren trang hien tai.</p>
-                <p>2. Chon `Translate to English`.</p>
-                <p>3. Neu thanh dich cua Chrome hien ra, chon `English`.</p>
+                <p>1.Right-click on the current page.</p>
+                <p>2. Select Translate to English.</p>
+                <p>3. If the Chrome translation bar appears, select English.</p>
               </div>
               <div className="mt-6 flex justify-end">
                 <button
