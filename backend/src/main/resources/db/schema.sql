@@ -41,7 +41,26 @@ CREATE TABLE reviews (
     CONSTRAINT fk_reviews_user
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_reviews_parent
-        FOREIGN KEY (parent_id) REFERENCES reviews(id) ON DELETE CASCADE
+        FOREIGN KEY (parent_id) REFERENCES reviews(id) ON DELETE CASCADE,
+    INDEX idx_reviews_experience_parent_created_at (experience_id, parent_id, created_at)
+);
+
+CREATE TABLE categories (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL UNIQUE,
+    slug VARCHAR(100) NOT NULL UNIQUE,
+    color_code VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE experience_categories (
+    experience_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    PRIMARY KEY (experience_id, category_id),
+    CONSTRAINT fk_experience_categories_experience
+        FOREIGN KEY (experience_id) REFERENCES experiences(id) ON DELETE CASCADE,
+    CONSTRAINT fk_experience_categories_category
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+    INDEX idx_experience_categories_category_experience (category_id, experience_id)
 );
 
 INSERT INTO experiences (

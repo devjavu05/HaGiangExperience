@@ -13,6 +13,7 @@ import com.hagiang.localexperience.experience.dto.CategoryResponseDTO;
 import com.hagiang.localexperience.experience.dto.ExperienceItineraryDayDTO;
 import com.hagiang.localexperience.experience.dto.ExperienceRequest;
 import com.hagiang.localexperience.experience.dto.ExperienceItinerarySlotDTO;
+import com.hagiang.localexperience.experience.dto.ExperienceReviewStatsDTO;
 import com.hagiang.localexperience.experience.dto.ExperienceResponseDTO;
 import com.hagiang.localexperience.experience.dto.NearbyStayDTO;
 import com.hagiang.localexperience.experience.dto.ReplyRequestDTO;
@@ -33,6 +34,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
@@ -113,18 +115,20 @@ public class ExperienceService {
 
     @Transactional(readOnly = true)
     public List<ExperienceResponseDTO> getAllExperiences() {
-        return experienceRepository.findAll()
-                .stream()
-                .map(this::toResponse)
+        List<Experience> experiences = experienceRepository.findAll();
+        Map<Long, ExperienceReviewStatsDTO> reviewStats = loadReviewStats(experiences);
+        return experiences.stream()
+                .map(experience -> toSummaryResponse(experience, reviewStats.get(experience.getId())))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<ExperienceResponseDTO> getMyExperiences(Long userId) {
         User currentUser = getAuthorizedLocalHost(userId);
-        return experienceRepository.findAllByAuthorOrderByCreatedAtDesc(currentUser)
-                .stream()
-                .map(this::toResponse)
+        List<Experience> experiences = experienceRepository.findAllByAuthorOrderByCreatedAtDesc(currentUser);
+        Map<Long, ExperienceReviewStatsDTO> reviewStats = loadReviewStats(experiences);
+        return experiences.stream()
+                .map(experience -> toSummaryResponse(experience, reviewStats.get(experience.getId())))
                 .toList();
     }
 
@@ -148,12 +152,14 @@ public class ExperienceService {
 
         Pageable pageable = PageRequest.of(safePage, safeSize, resolveSort(sort));
 
+        var pageResult = experienceRepository.findAll(
+                ExperienceSpecifications.search(normalizedKeyword, minPrice, maxPrice, categorySlugs),
+                pageable
+        );
+        Map<Long, ExperienceReviewStatsDTO> reviewStats = loadReviewStats(pageResult.getContent());
+
         return PageResponse.from(
-                experienceRepository.findAll(
-                                ExperienceSpecifications.search(normalizedKeyword, minPrice, maxPrice, categorySlugs),
-                                pageable
-                        )
-                        .map(this::toResponse)
+                pageResult.map(experience -> toSummaryResponse(experience, reviewStats.get(experience.getId())))
         );
     }
 
@@ -404,6 +410,40 @@ public class ExperienceService {
                 .build();
     }
 
+    private ExperienceResponseDTO toSummaryResponse(Experience experience, ExperienceReviewStatsDTO stats) {
+        long totalReviews = stats != null && stats.getTotalReviews() != null ? stats.getTotalReviews() : 0L;
+        double averageRating = stats != null && stats.getAverageRating() != null ? stats.getAverageRating() : 0.0;
+
+        return ExperienceResponseDTO.builder()
+                .id(experience.getId())
+                .title(experience.getTitle())
+                .description(experience.getDescription())
+                .contentDetail(experience.getContentDetail())
+                .activities(readJson(experience.getActivities()))
+                .highlights(readJson(experience.getHighlights()))
+                .nearbyStays(readNearbyStaysJson(experience.getNearbyStays()))
+                .itinerary(toItineraryDayDtos(experience.getItineraries()))
+                .duration(experience.getDuration())
+                .price(experience.getPrice())
+                .address(experience.getAddress())
+                .mapsPlaceId(experience.getMapsPlaceId())
+                .latitude(experience.getLatitude())
+                .longitude(experience.getLongitude())
+                .categories(experience.getCategories().stream()
+                        .sorted(Comparator.comparing(Category::getName))
+                        .map(this::toCategoryResponse)
+                        .toList())
+                .imageUrls(experience.getImages().stream().map(ExperienceImage::getImageUrl).toList())
+                .ownerId(experience.getAuthor() != null ? experience.getAuthor().getId() : null)
+                .authorName(experience.getAuthor() != null ? experience.getAuthor().getUsername() : null)
+                .authorPhoneNumber(experience.getAuthor() != null ? experience.getAuthor().getPhoneNumber() : null)
+                .averageRating(totalReviews == 0 ? 0.0 : roundToOneDecimal(averageRating))
+                .totalReviews(Math.toIntExact(totalReviews))
+                .reviews(List.of())
+                .createdAt(experience.getCreatedAt())
+                .build();
+    }
+
     private ReviewResponseDTO toReviewResponse(Review review) {
         Review reply = reviewRepository.findByParent(review).orElse(null);
 
@@ -479,6 +519,26 @@ public class ExperienceService {
                             ));
                 })
                 .toList();
+    }
+
+    private Map<Long, ExperienceReviewStatsDTO> loadReviewStats(List<Experience> experiences) {
+        if (experiences == null || experiences.isEmpty()) {
+            return Map.of();
+        }
+
+        List<Long> experienceIds = experiences.stream()
+                .map(Experience::getId)
+                .filter(java.util.Objects::nonNull)
+                .toList();
+
+        if (experienceIds.isEmpty()) {
+            return Map.of();
+        }
+
+        Map<Long, ExperienceReviewStatsDTO> statsByExperienceId = new HashMap<>();
+        reviewRepository.findTopLevelReviewStatsByExperienceIds(experienceIds)
+                .forEach(stats -> statsByExperienceId.put(stats.getExperienceId(), stats));
+        return statsByExperienceId;
     }
 
     private List<NearbyStayDTO> normalizeNearbyStays(List<NearbyStayDTO> nearbyStays) {

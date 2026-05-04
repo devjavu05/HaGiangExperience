@@ -133,9 +133,19 @@ public class SchemaMigrationRunner implements CommandLineRunner {
                 "CREATE INDEX idx_reviews_experience_created_at ON reviews(experience_id, created_at)"
         );
         ensureIndex(
+                "experience_images",
+                "idx_experience_images_experience_id",
+                "CREATE INDEX idx_experience_images_experience_id ON experience_images(experience_id)"
+        );
+        ensureIndex(
                 "reviews",
                 "idx_reviews_parent_id",
                 "CREATE INDEX idx_reviews_parent_id ON reviews(parent_id)"
+        );
+        ensureIndex(
+                "reviews",
+                "idx_reviews_experience_parent_created_at",
+                "CREATE INDEX idx_reviews_experience_parent_created_at ON reviews(experience_id, parent_id, created_at)"
         );
 
         seedCategory("Văn hóa & Đời sống", "culture", "#E8F3EE");
