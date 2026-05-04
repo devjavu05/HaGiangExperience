@@ -44,6 +44,9 @@ public class Experience {
     @Column(nullable = false, columnDefinition = "JSON")
     private String highlights;
 
+    @Column(name = "nearby_stays", nullable = false, columnDefinition = "JSON")
+    private String nearbyStays;
+
     @Column(nullable = false, length = 100)
     private String duration;
 
@@ -152,6 +155,14 @@ public class Experience {
 
     public void setHighlights(String highlights) {
         this.highlights = highlights;
+    }
+
+    public String getNearbyStays() {
+        return nearbyStays;
+    }
+
+    public void setNearbyStays(String nearbyStays) {
+        this.nearbyStays = nearbyStays;
     }
 
     public String getDuration() {

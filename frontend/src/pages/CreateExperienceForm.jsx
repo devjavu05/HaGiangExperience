@@ -21,6 +21,7 @@ const initialForm = {
   contentDetail: "",
   activities: [""],
   highlights: [""],
+  nearbyStays: [{ name: "", type: "Nhà dân", address: "" }],
   scheduleType: "hourly",
   hourCount: 1,
   dayCount: 1,
@@ -77,6 +78,13 @@ function CreateExperienceForm({
       contentDetail: initialData.contentDetail ?? "",
       activities: initialData.activities?.length ? initialData.activities : [""],
       highlights: initialData.highlights?.length ? initialData.highlights : [""],
+      nearbyStays: initialData.nearbyStays?.length
+        ? initialData.nearbyStays.map((item) => ({
+            name: item.name ?? "",
+            type: item.type ?? "Nhà dân",
+            address: item.address ?? ""
+          }))
+        : [{ name: "", type: "Nhà dân", address: "" }],
       scheduleType:
         Math.max(...normalizedInitialItinerary.map((item) => Number(item.dayNumber) || 1)) > 1
           ? "daily"
@@ -123,6 +131,7 @@ function CreateExperienceForm({
 
   const canRemoveActivity = useMemo(() => form.activities.length > 1, [form.activities.length]);
   const canRemoveHighlight = useMemo(() => form.highlights.length > 1, [form.highlights.length]);
+  const canRemoveNearbyStay = useMemo(() => form.nearbyStays.length > 1, [form.nearbyStays.length]);
   const canRemoveItinerary = useMemo(() => form.itinerary.length > 1, [form.itinerary.length]);
   const totalImages = form.existingImageUrls.length + form.files.length;
   const isEditMode = mode === "edit";
@@ -161,6 +170,13 @@ function CreateExperienceForm({
 
   function addListItem(field) {
     setForm((current) => ({ ...current, [field]: [...current[field], ""] }));
+  }
+
+  function addNearbyStay() {
+    setForm((current) => ({
+      ...current,
+      nearbyStays: [...current.nearbyStays, { name: "", type: "Nhà dân", address: "" }]
+    }));
   }
 
   function updateScheduleType(nextType) {
@@ -240,6 +256,22 @@ function CreateExperienceForm({
     setForm((current) => ({
       ...current,
       [field]: current[field].filter((_, itemIndex) => itemIndex !== index)
+    }));
+  }
+
+  function updateNearbyStay(index, field, value) {
+    setForm((current) => ({
+      ...current,
+      nearbyStays: current.nearbyStays.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, [field]: value } : item
+      )
+    }));
+  }
+
+  function removeNearbyStay(index) {
+    setForm((current) => ({
+      ...current,
+      nearbyStays: current.nearbyStays.filter((_, itemIndex) => itemIndex !== index)
     }));
   }
 
@@ -367,6 +399,22 @@ function CreateExperienceForm({
 
     const cleanedActivities = form.activities.map((item) => item.trim()).filter(Boolean);
     const cleanedHighlights = form.highlights.map((item) => item.trim()).filter(Boolean);
+    const hasPartialNearbyStay = form.nearbyStays.some((item) => {
+      const name = item.name?.trim() ?? "";
+      const type = item.type?.trim() ?? "";
+      const address = item.address?.trim() ?? "";
+      const hasAny = name || type || address;
+      const isComplete = name && type && address;
+      return hasAny && !isComplete;
+    });
+    const cleanedNearbyStays = form.nearbyStays
+      .map((item) => ({
+        name: item.name?.trim() ?? "",
+        type: item.type?.trim() ?? "",
+        address: item.address?.trim() ?? ""
+      }))
+      .filter((item) => item.name || item.type || item.address)
+      .filter((item) => item.name && item.type && item.address);
     const cleanedItinerary = form.itinerary
       .map((item) => ({
         dayNumber: Number(item.dayNumber) > 0 ? Number(item.dayNumber) : 1,
@@ -379,6 +427,9 @@ function CreateExperienceForm({
 
     if (!cleanedActivities.length) nextErrors.activities = "Cần ít nhất 1 hoạt động.";
     if (!cleanedHighlights.length) nextErrors.highlights = "Cần ít nhất 1 điểm nhấn.";
+    if (hasPartialNearbyStay) {
+      nextErrors.nearbyStays = "Nếu thêm nơi cư trú, hãy nhập đủ tên, loại hình và địa chỉ.";
+    }
 
     setErrors(nextErrors);
 
@@ -387,6 +438,7 @@ function CreateExperienceForm({
       errors: nextErrors,
       cleanedActivities,
       cleanedHighlights,
+      cleanedNearbyStays,
       cleanedItinerary
     };
   }
@@ -400,6 +452,7 @@ function CreateExperienceForm({
       "contentDetail",
       "activities",
       "highlights",
+      "nearbyStays",
       "price",
       "hourCount",
       "files"
@@ -427,7 +480,14 @@ function CreateExperienceForm({
     event.preventDefault();
     setHasAttemptedSubmit(true);
 
-    const { isValid, errors: nextErrors, cleanedActivities, cleanedHighlights, cleanedItinerary } =
+    const {
+      isValid,
+      errors: nextErrors,
+      cleanedActivities,
+      cleanedHighlights,
+      cleanedNearbyStays,
+      cleanedItinerary
+    } =
       validateForm();
     if (!isValid) {
       scrollToFirstError(nextErrors);
@@ -451,6 +511,7 @@ function CreateExperienceForm({
         longitude: "",
         activities: cleanedActivities,
         highlights: cleanedHighlights,
+        nearbyStays: cleanedNearbyStays,
         itinerary: cleanedItinerary,
         categoryIds: [],
         categorySlugs: form.categorySlugs
@@ -669,6 +730,15 @@ function CreateExperienceForm({
                   onRemove={(index) => removeListItem("highlights", index)}
                   canRemove={canRemoveHighlight}
                   placeholder="Ví dụ: View ruộng bậc thang"
+                />
+
+                <NearbyStayField
+                  items={form.nearbyStays}
+                  error={visibleErrors.nearbyStays}
+                  onAdd={addNearbyStay}
+                  onChange={updateNearbyStay}
+                  onRemove={removeNearbyStay}
+                  canRemove={canRemoveNearbyStay}
                 />
               </div>
               </SectionCard>
@@ -1251,6 +1321,99 @@ function DynamicListField({
             >
               <Trash2 size={16} />
             </button>
+          </div>
+        ))}
+      </div>
+
+      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+    </div>
+  );
+}
+
+function NearbyStayField({ items, error, onAdd, onChange, onRemove, canRemove }) {
+  return (
+    <div
+      data-field="nearbyStays"
+      className={`space-y-4 rounded-[28px] p-4 sm:col-span-2 ${
+        error ? "border border-red-300 bg-red-50/60" : "bg-[#F1F7F3]"
+      }`}
+    >
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <label className="text-sm font-medium text-stone-800">Nơi cư trú gần địa điểm</label>
+          <button
+            type="button"
+            onClick={onAdd}
+            className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-[#2F5D46] shadow-sm"
+          >
+            <Plus size={14} />
+            Thêm nơi ở
+          </button>
+        </div>
+        <p className="text-xs leading-6 text-stone-500">
+          Gợi ý homestay, nhà dân hoặc nhà nghỉ gần khu trải nghiệm để khách tiện sắp xếp lưu trú.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        {items.map((item, index) => (
+          <div
+            key={`nearby-stay-${index}`}
+            className="rounded-[24px] border border-[#DDEBE1] bg-white p-4 shadow-sm"
+          >
+            <div className="grid gap-4 sm:grid-cols-[1fr_180px]">
+              <Field
+                label="Tên nơi ở"
+                input={
+                  <input
+                    value={item.name}
+                    onChange={(event) => onChange(index, "name", event.target.value)}
+                    placeholder="Ví dụ: Homestay Phìn Hồ"
+                    className={inputClass(false)}
+                  />
+                }
+              />
+
+              <Field
+                label="Loại hình"
+                input={
+                  <select
+                    value={item.type}
+                    onChange={(event) => onChange(index, "type", event.target.value)}
+                    className={inputClass(false)}
+                  >
+                    <option value="Nhà dân">Nhà dân</option>
+                    <option value="Nhà nghỉ">Nhà nghỉ</option>
+                    <option value="Homestay">Homestay</option>
+                  </select>
+                }
+              />
+            </div>
+
+            <div className="mt-4 flex gap-3">
+              <div className="flex-1">
+                <Field
+                  label="Địa chỉ hoặc mô tả vị trí"
+                  input={
+                    <textarea
+                      value={item.address}
+                      onChange={(event) => onChange(index, "address", event.target.value)}
+                      rows={3}
+                      placeholder="Ví dụ: Cách điểm trải nghiệm 5 phút đi xe, gần trung tâm xã"
+                      className={inputClass(false)}
+                    />
+                  }
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => onRemove(index)}
+                disabled={!canRemove}
+                className="mt-8 flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-[#CFE3D7] bg-white text-[#486152] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
           </div>
         ))}
       </div>

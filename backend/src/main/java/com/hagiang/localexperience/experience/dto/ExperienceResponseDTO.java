@@ -12,6 +12,7 @@ public class ExperienceResponseDTO {
     private String contentDetail;
     private List<String> activities;
     private List<String> highlights;
+    private List<NearbyStayDTO> nearbyStays;
     private List<ExperienceItineraryDayDTO> itinerary;
     private String duration;
     private BigDecimal price;
@@ -51,6 +52,10 @@ public class ExperienceResponseDTO {
 
     public List<String> getHighlights() {
         return highlights;
+    }
+
+    public List<NearbyStayDTO> getNearbyStays() {
+        return nearbyStays;
     }
 
     public List<ExperienceItineraryDayDTO> getItinerary() {
@@ -152,6 +157,11 @@ public class ExperienceResponseDTO {
 
         public Builder highlights(List<String> highlights) {
             response.highlights = highlights;
+            return this;
+        }
+
+        public Builder nearbyStays(List<NearbyStayDTO> nearbyStays) {
+            response.nearbyStays = nearbyStays;
             return this;
         }
 

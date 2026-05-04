@@ -10,6 +10,7 @@ public class ExperienceRequest {
     private String contentDetail;
     private List<String> activities;
     private List<String> highlights;
+    private List<NearbyStayDTO> nearbyStays;
     private List<ExperienceItineraryDayDTO> itinerary;
     private List<String> existingImageUrls;
     private String duration;
@@ -59,6 +60,14 @@ public class ExperienceRequest {
 
     public void setHighlights(List<String> highlights) {
         this.highlights = highlights;
+    }
+
+    public List<NearbyStayDTO> getNearbyStays() {
+        return nearbyStays;
+    }
+
+    public void setNearbyStays(List<NearbyStayDTO> nearbyStays) {
+        this.nearbyStays = nearbyStays;
     }
 
     public List<ExperienceItineraryDayDTO> getItinerary() {

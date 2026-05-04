@@ -1,10 +1,11 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:4000/test}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+    url: ${SPRING_DATASOURCE_URL:${JDBC_DATABASE_URL:${DATABASE_URL:jdbc:mysql://gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/test?useSSL=true&requireSSL=true&sslMode=VERIFY_IDENTITY&enabledTLSProtocols=TLSv1.2,TLSv1.3&serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci}}}
+    username: ${SPRING_DATASOURCE_USERNAME:${JDBC_DATABASE_USERNAME:${DATABASE_USERNAME:PFKdaEVoR63j83A.root}}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${JDBC_DATABASE_PASSWORD:${DATABASE_PASSWORD:KXPodU37fsmvXu8z}}}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
     properties:

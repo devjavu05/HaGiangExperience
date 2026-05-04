@@ -8,6 +8,7 @@ CREATE TABLE experiences (
     content_detail LONGTEXT NOT NULL COMMENT 'Rich text/HTML detail content',
     activities JSON NOT NULL COMMENT 'Array of activities',
     highlights JSON NOT NULL COMMENT 'Array of highlights',
+    nearby_stays JSON NOT NULL COMMENT 'Array of nearby stays such as homestays and guesthouses',
     duration VARCHAR(100) NOT NULL COMMENT 'Example: 1 day, 2 hours',
     price DECIMAL(12, 2) NOT NULL COMMENT 'Price in VND or selected currency',
     address VARCHAR(500) NULL COMMENT 'Specific address shown on the map',
@@ -49,6 +50,7 @@ INSERT INTO experiences (
     content_detail,
     activities,
     highlights,
+    nearby_stays,
     duration,
     price,
     address,
@@ -61,6 +63,10 @@ INSERT INTO experiences (
     '<p>Ban se dong hanh cung nguoi dan dia phuong de tim hieu quy trinh trong va hai tra.</p>',
     JSON_ARRAY('Hai tra', 'Di bo tham doi', 'Thuong thuc tra'),
     JSON_ARRAY('Ket noi van hoa dia phuong', 'Canh quan nui rung dep', 'Phu hop nhom nho'),
+    JSON_ARRAY(
+        JSON_OBJECT('name', 'Homestay Phin Ho', 'type', 'Nha dan', 'address', 'Gan doi tra Phin Ho, Thong Nguyen'),
+        JSON_OBJECT('name', 'Nha nghi Thong Nguyen', 'type', 'Nha nghi', 'address', 'Trung tam xa Thong Nguyen')
+    ),
     '1 ngay',
     450000.00,
     'Thon Phin Ho, Thong Nguyen, Hoang Su Phi, Ha Giang',

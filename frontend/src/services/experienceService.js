@@ -73,6 +73,7 @@ async function submitExperience(url, payload, method = "post") {
       contentDetail: payload.contentDetail,
       activities: payload.activities,
       highlights: payload.highlights,
+      nearbyStays: payload.nearbyStays ?? [],
       itinerary: buildNestedItinerary(payload.itinerary ?? []),
       existingImageUrls: payload.existingImageUrls ?? [],
       duration: payload.duration,

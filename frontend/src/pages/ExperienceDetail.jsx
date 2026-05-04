@@ -47,6 +47,7 @@ function ExperienceDetail({
   const reviews = experience.reviews ?? [];
   const activities = experience.activities ?? [];
   const highlights = experience.highlights ?? [];
+  const nearbyStays = experience.nearbyStays ?? [];
 
   const hasLocation = Boolean(experience.address || experience.location);
   const locationText = experience.address || experience.location;
@@ -239,6 +240,45 @@ function ExperienceDetail({
 
                 {itinerary.length ? (
                   <EnhancedItineraryTimeline itinerary={itinerary} />
+                ) : null}
+
+                {nearbyStays.length ? (
+                  <section className="mb-12 rounded-[30px] border border-slate-100 bg-white px-6 py-10 shadow-sm sm:px-8 sm:py-10">
+                    <div className="space-y-3">
+                      <p className="text-xs font-semibold uppercase tracking-[0.34em] text-slate-500">
+                        Lưu trú gần đó
+                      </p>
+                      <h2 className="text-3xl font-bold text-[#1A3021]">
+                        Gợi ý nơi ở gần điểm trải nghiệm
+                      </h2>
+                      <p className="text-sm leading-7 text-slate-600">
+                        Danh sách này giúp du khách dễ chọn chỗ nghỉ nếu muốn ở lại qua đêm hoặc đi nhóm.
+                      </p>
+                    </div>
+
+                    <div className="mt-6 grid gap-4 md:grid-cols-2">
+                      {nearbyStays.map((stay, index) => (
+                        <article
+                          key={`${stay.name}-${index}`}
+                          className="rounded-[24px] border border-[#DDEBE1] bg-[#F8FCF9] p-5"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-lg font-semibold text-slate-900">{stay.name}</p>
+                              <p className="mt-1 text-sm font-medium text-[#2F5D46]">{stay.type}</p>
+                            </div>
+                            <span className="rounded-full bg-[#E8F3EE] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#2F5D46]">
+                              Lưu trú
+                            </span>
+                          </div>
+                          <div className="mt-4 flex items-start gap-3 text-sm leading-7 text-slate-600">
+                            <MapPinned size={18} className="mt-1 shrink-0 text-[#486152]" />
+                            <span>{stay.address}</span>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
                 ) : null}
 
                 {hasLocation ? (

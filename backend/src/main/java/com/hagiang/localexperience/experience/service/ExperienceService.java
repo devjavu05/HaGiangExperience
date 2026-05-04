@@ -14,6 +14,7 @@ import com.hagiang.localexperience.experience.dto.ExperienceItineraryDayDTO;
 import com.hagiang.localexperience.experience.dto.ExperienceRequest;
 import com.hagiang.localexperience.experience.dto.ExperienceItinerarySlotDTO;
 import com.hagiang.localexperience.experience.dto.ExperienceResponseDTO;
+import com.hagiang.localexperience.experience.dto.NearbyStayDTO;
 import com.hagiang.localexperience.experience.dto.ReplyRequestDTO;
 import com.hagiang.localexperience.experience.dto.ReviewRequestDTO;
 import com.hagiang.localexperience.experience.dto.ReviewReplyResponseDTO;
@@ -47,6 +48,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class ExperienceService {
 
     private static final TypeReference<List<String>> STRING_LIST_TYPE = new TypeReference<>() {
+    };
+    private static final TypeReference<List<NearbyStayDTO>> NEARBY_STAY_LIST_TYPE = new TypeReference<>() {
     };
 
     private final ExperienceRepository experienceRepository;
@@ -87,6 +90,7 @@ public class ExperienceService {
         experience.setContentDetail(request.getContentDetail());
         experience.setActivities(writeJson(request.getActivities()));
         experience.setHighlights(writeJson(request.getHighlights()));
+        experience.setNearbyStays(writeJsonNearbyStays(request.getNearbyStays()));
         experience.setItineraries(toItineraryEntities(request.getItinerary()));
         experience.setDuration(request.getDuration());
         experience.setPrice(request.getPrice());
@@ -251,6 +255,7 @@ public class ExperienceService {
         experience.setContentDetail(request.getContentDetail());
         experience.setActivities(writeJson(request.getActivities()));
         experience.setHighlights(writeJson(request.getHighlights()));
+        experience.setNearbyStays(writeJsonNearbyStays(request.getNearbyStays()));
         experience.setItineraries(toItineraryEntities(request.getItinerary()));
         experience.setDuration(request.getDuration());
         experience.setPrice(request.getPrice());
@@ -330,11 +335,30 @@ public class ExperienceService {
         }
     }
 
+    private String writeJsonNearbyStays(List<NearbyStayDTO> values) {
+        try {
+            return objectMapper.writeValueAsString(normalizeNearbyStays(values));
+        } catch (JsonProcessingException ex) {
+            throw new IllegalArgumentException("Unable to serialize nearby stays");
+        }
+    }
+
     private List<String> readJson(String json) {
         try {
             return objectMapper.readValue(json, STRING_LIST_TYPE);
         } catch (JsonProcessingException ex) {
             throw new IllegalArgumentException("Unable to deserialize list data");
+        }
+    }
+
+    private List<NearbyStayDTO> readNearbyStaysJson(String json) {
+        if (!StringUtils.hasText(json)) {
+            return List.of();
+        }
+        try {
+            return objectMapper.readValue(json, NEARBY_STAY_LIST_TYPE);
+        } catch (JsonProcessingException ex) {
+            throw new IllegalArgumentException("Unable to deserialize nearby stays");
         }
     }
 
@@ -357,6 +381,7 @@ public class ExperienceService {
                 .contentDetail(experience.getContentDetail())
                 .activities(readJson(experience.getActivities()))
                 .highlights(readJson(experience.getHighlights()))
+                .nearbyStays(readNearbyStaysJson(experience.getNearbyStays()))
                 .itinerary(toItineraryDayDtos(experience.getItineraries()))
                 .duration(experience.getDuration())
                 .price(experience.getPrice())
@@ -453,6 +478,26 @@ public class ExperienceService {
                                     slot.getDescription().trim()
                             ));
                 })
+                .toList();
+    }
+
+    private List<NearbyStayDTO> normalizeNearbyStays(List<NearbyStayDTO> nearbyStays) {
+        if (nearbyStays == null) {
+            return List.of();
+        }
+
+        return nearbyStays.stream()
+                .filter(item -> item != null)
+                .map(item -> {
+                    NearbyStayDTO normalized = new NearbyStayDTO();
+                    normalized.setName(item.getName() == null ? "" : item.getName().trim());
+                    normalized.setType(item.getType() == null ? "" : item.getType().trim());
+                    normalized.setAddress(item.getAddress() == null ? "" : item.getAddress().trim());
+                    return normalized;
+                })
+                .filter(item -> StringUtils.hasText(item.getName())
+                        || StringUtils.hasText(item.getType())
+                        || StringUtils.hasText(item.getAddress()))
                 .toList();
     }
 

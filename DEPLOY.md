@@ -56,6 +56,8 @@ CLOUDINARY_FOLDER=ha-giang-local-experience
 Important note:
 
 - Because image assets are stored in Cloudinary, they remain available after Render restarts or redeploys.
+- `SPRING_DATASOURCE_URL` must be a full JDBC URL starting with `jdbc:mysql://...`. If this variable exists but is empty, Spring treats it as set and will not fall back to the localhost default.
+- The startup error `Unable to determine Dialect without JDBC metadata` usually means Render does not actually have a usable database URL at runtime. Check the exact values of `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, and `SPRING_DATASOURCE_PASSWORD` in the Render dashboard, then redeploy.
 
 After deploy, Render will give you a backend URL like:
 

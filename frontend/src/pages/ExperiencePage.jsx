@@ -77,6 +77,7 @@ function normalizeExperience(item) {
     contentDetail: item.contentDetail,
     activities: item.activities ?? [],
     highlights: item.highlights ?? [],
+    nearbyStays: item.nearbyStays ?? [],
     itinerary,
     duration: item.duration || "Dang cap nhat",
     price: formatPrice(item.price),
